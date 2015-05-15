@@ -14,6 +14,7 @@ int query_disks();
 int query_disks_info(char *diskName);
 char* get_directory_id(char *dirName, char *diskName);
 int query_directory_info(char *dirName, char *diskName);
+int query_file_info(char *fileName, char *dirName, char *diskName);
 int get_rows();
 int get_fields();
 void print_result();

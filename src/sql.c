@@ -154,6 +154,31 @@ query_directory_info(char *dirName, char *diskName){
 }
 
 
+/**
+ * 查询文件信息
+ */
+int
+query_file_info(char *fileName, char *dirName, char *diskName){
+
+	char *dirId = (char *) malloc(MAX_BUF_SIZE);
+	dirId = get_directory_id(dirName, diskName);
+	free_result();
+
+
+	char sql[MAX_BUF_SIZE];
+	memset(sql, 0, sizeof(sql));
+	sprintf(sql, "SELECT * FROM `file_info` Where file_name = '%s' AND directory_id = '%s' AND disk_name = '%s'", fileName, dirId, diskName);
+
+	if (mysql_query(g_conn, sql)){
+		 print_mysql_error(NULL);
+	}
+
+	g_res = mysql_store_result(g_conn); // 从服务器传送结果集至本地，mysql_use_result直接使用服务器上的记录集
+
+	return EXIT_SUCCESS;
+}
+
+
 
 /**
  * 获取数据集行数

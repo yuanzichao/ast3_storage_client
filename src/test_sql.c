@@ -29,6 +29,10 @@ int main(void) {
     print_result();
     free_result();
 
+    query_file_info("20150424_0001.fits", "20150424", "disk_001");     //测试文件查询信息
+    print_result();
+    free_result();
+
 
     close_db(); // 关闭链接
 
