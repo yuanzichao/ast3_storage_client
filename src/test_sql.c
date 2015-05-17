@@ -25,11 +25,11 @@ int main(void) {
 	char str_f_t [LEN];
 	strftime(str_f_t, sizeof(str_f_t), "%G-%m-%d %H:%M:%S", tm_local);
 
+	//初始化Disk_Info
+    Disk_Info disk_info = {0, "disk_005", "5a9068d5a7bf4b3bbec918af44e9d4e0", "ext3/ext4", 1024.00, 300.00, "", 0, 0};
+    sprintf(disk_info.recent_use_time, "%s", str_f_t);  //时间单独赋值
 
-    Disk_Info disk_info = {0, "disk_003", "1cbb5d04d65742e0ac6a532167a61262", "ext3/ext4", 1024.00, 300.00, str_f_t, 0, 0};
     insert_disk(disk_info);    //测试插入磁盘信息
-
-
 
 
     query_disks();        //测试磁盘查询
