@@ -80,6 +80,26 @@ query_disks(){
 
 
 /**
+ * 查询指定硬盘信息
+ */
+int
+query_disk(char *diskName){
+
+    char sql[MAX_BUF_SIZE];
+    memset(sql, 0, sizeof(sql));
+    sprintf(sql, "SELECT * FROM `disk_info` Where disk_name = '%s'", diskName);
+
+    if (mysql_query(g_conn, sql)){
+    	 print_mysql_error(NULL);
+    }
+
+    g_res = mysql_store_result(g_conn); // 从服务器传送结果集至本地，mysql_use_result直接使用服务器上的记录集
+
+    return EXIT_SUCCESS;
+}
+
+
+/**
  * 查询硬盘内目录信息
  */
 int
@@ -230,7 +250,7 @@ get_directory_info(MYSQL_ROW g_row){
  */
 Disk_Info
 get_disk_info(MYSQL_ROW g_row){
-	Disk_Info disk_info;
+	Disk_Info disk_info = {};
 	memcpy(&disk_info, *g_row, sizeof(disk_info));
     return disk_info;
 }

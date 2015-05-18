@@ -11,6 +11,7 @@ int init_mysql();
 void print_mysql_error(const char *msg);
 int query();
 int query_disks();
+int query_disk(char *diskName);
 int query_disks_info(char *diskName);
 char* get_directory_id(char *dirName, char *diskName);
 int query_directory_info(char *dirName, char *diskName);
