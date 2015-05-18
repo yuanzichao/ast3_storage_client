@@ -1,12 +1,13 @@
 #include <mysql/mysql.h>
 #include "type_def.h"
 
+#define MAX_BUF_SIZE 1024 // 缓冲区最大字节数
+
 MYSQL *g_conn; // mysql 连接
 MYSQL_RES *g_res; // mysql 记录集
 MYSQL_ROW g_row; // 字符串数组，mysql 记录行
 
-#define MAX_BUF_SIZE 1024 // 缓冲区最大字节数
-
+//函数区
 int init_mysql();
 void print_mysql_error(const char *msg);
 int query();
