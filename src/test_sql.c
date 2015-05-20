@@ -37,14 +37,14 @@ int main(void) {
 //
 //    insert_directory(dir_info);  //测试插入目录信息
 
-//    //同时更新Disk_Info
-//    Disk_Info disk_info = {};
-//	query_disk("disk_005");
-//
-////    disk_info = get_disk_info("disk_005");
-//
-//    printf("%s\n", disk_info.disk_name);
-////    update_disk(disk_info);
+    //同时更新Disk_Info
+    Disk_Info disk_info = {};
+	query_disk("disk_005");
+
+    disk_info = get_disk_info(mysql_fetch_row(g_res));
+
+    printf("%s\n", disk_info.disk_name);
+    update_disk(disk_info);
 
 
 

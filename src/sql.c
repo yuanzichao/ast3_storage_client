@@ -259,7 +259,20 @@ get_directory_info(MYSQL_ROW g_row){
  */
 Disk_Info
 get_disk_info(MYSQL_ROW g_row){
-	Disk_Info disk_info = {};
+	Disk_Info disk_info;
+	char size[MAX_BUF_SIZE];
+	GetProfileString("./etc/disk_info.conf", "DISK_INFO", "Size", size);
+	int i;
+//	i = atoi(size);
+	for(i=0; i<get_fields(); i++){
+		char value[MAX_BUF_SIZE];
+		memset(value, 0, sizeof(value));
+
+		GetProfileString("./etc/disk_info.conf", "DISK_INFO", "0", value);
+//		disk_info = {value:g_row[i]};
+
+	}
+
 	memcpy(&disk_info, *g_row, sizeof(disk_info));
     return disk_info;
 }
