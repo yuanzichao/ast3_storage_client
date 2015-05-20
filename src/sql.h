@@ -1,5 +1,5 @@
 #include <mysql/mysql.h>
-#include "type_def.h"
+#include "orm/db.h"
 
 #define MAX_BUF_SIZE 1024 // 缓冲区最大字节数
 
@@ -20,15 +20,15 @@ int query_file_info(char *fileName, char *dirName, char *diskName);
 int get_rows();
 int get_fields();
 void print_result();
-Directory_Info get_directory_info(MYSQL_ROW g_row);
-Disk_Info get_disk_info(MYSQL_ROW g_row);
-File_Info get_file_info(MYSQL_ROW g_row);
-int insert_directory(Directory_Info directory_info);
-int insert_disk(Disk_Info disk_info);
-int insert_file(File_Info file_info);
-void update_directory(Directory_Info directory_info);
-void update_disk(Disk_Info disk_info);
-void update_file(File_Info file_info);
+db_directory_info get_directory_info(MYSQL_ROW g_row);
+db_disk_info get_disk_info(MYSQL_ROW g_row);
+db_file_info get_file_info(MYSQL_ROW g_row);
+int insert_directory(db_directory_info directory_info);
+int insert_disk(db_disk_info disk_info);
+int insert_file(db_file_info file_info);
+void update_directory(db_directory_info directory_info);
+void update_disk(db_disk_info disk_info);
+void update_file(db_file_info file_info);
 void delete();
 
 

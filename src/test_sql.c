@@ -25,26 +25,26 @@ int main(void) {
 	char str_f_t [LEN];
 	strftime(str_f_t, sizeof(str_f_t), "%G-%m-%d %H:%M:%S", tm_local);
 
-//	//初始化Disk_Info
-//    Disk_Info disk_info = {0, "disk_005", "5a9068d5a7bf4b3bbec918af44e9d4e0", "ext3/ext4", 1024.00, 300.00, "", 0, 0};
-//    sprintf(disk_info.recent_use_time, "%s", str_f_t);  //时间单独赋值
-//
-//    insert_disk(disk_info);    //测试插入磁盘信息
-//
+	//初始化Disk_Info
+    Disk_Info disk_info = {0, "disk_005", "5a9068d5a7bf4b3bbec918af44e9d4e0", "ext3/ext4", 1024.00, 300.00, "", 0, 0};
+    sprintf(disk_info.recent_use_time, "%s", str_f_t);  //时间单独赋值
+
+    insert_disk(disk_info);    //测试插入磁盘信息
+
 //    Directory_Info dir_info = {0, "2015051", "5a9068d5a7bf4b3bbec918af44e9d4e0", "disk_005", 0, 800, "", "", 0, 0};
 //    sprintf(dir_info.recent_use_time, "%s", str_f_t);  //时间单独赋值
 //    sprintf(dir_info.time, "%s", str_f_t);  //时间单独赋值
 //
 //    insert_directory(dir_info);  //测试插入目录信息
 
-    //同时更新Disk_Info
-    Disk_Info disk_info = {};
-	query_disk("disk_005");
-
-    disk_info = get_disk_info(mysql_fetch_row(g_res));
-
-    printf("%s\n", disk_info.disk_name);
-    update_disk(disk_info);
+//    //同时更新Disk_Info
+//    Disk_Info disk_info = {};
+//	query_disk("disk_005");
+//
+//    disk_info = get_disk_info(mysql_fetch_row(g_res));
+//
+//    printf("%s\n", disk_info.disk_name);
+//    update_disk(disk_info);
 
 
 

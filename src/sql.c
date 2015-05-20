@@ -245,31 +245,31 @@ print_result(){
 
 
 /**
- * 获取Directory_Info
+ * 获取db_directory_info
  */
-Directory_Info
+db_directory_info
 get_directory_info(MYSQL_ROW g_row){
-	Directory_Info directory_info;
+	db_directory_info directory_info;
 	memcpy(&directory_info, *g_row, sizeof(directory_info));
     return directory_info;
 }
 
 /**
- * 获取Disk_Info
+ * 获取db_disk_info
  */
-Disk_Info
+db_disk_info
 get_disk_info(MYSQL_ROW g_row){
-	Disk_Info disk_info = {};
+	db_disk_info disk_info = {};
 	memcpy(&disk_info, *g_row, sizeof(disk_info));
     return disk_info;
 }
 
 /**
- * 获取File_Info
+ * 获取db_file_info
  */
-File_Info
+db_file_info
 get_file_info(MYSQL_ROW g_row){
-	File_Info file_info;
+	db_file_info file_info;
 	memcpy(&file_info, *g_row, sizeof(file_info));
     return file_info;
 }
@@ -280,13 +280,10 @@ get_file_info(MYSQL_ROW g_row){
  * 插入目录信息
  */
 int
-insert_directory(Directory_Info directory_info)
+insert_directory(db_directory_info directory_info)
  {
-      char sql[MAX_BUF_SIZE];
-      memset(sql, 0, sizeof(sql));
-      sprintf(sql, "INSERT INTO directory_info(directory_name, disk_uuid, disk_name, parent_id, directory_size, time, recent_use_time, permission, accessed_time, file_number) VALUES \ ('%s', '%s', '%s', %d, %f, '%s', '%s', %d, %d, %d)", directory_info.directory_name, directory_info.disk_uuid, directory_info.disk_name, directory_info.parent_id, directory_info.directory_size, directory_info.time, directory_info.recent_use_time, directory_info.permission, directory_info.accessed_time, directory_info.file_number);
 
-      if (mysql_query(g_conn, sql) != 0){
+      if (db_directory_info__insert (directory_info) != 0){
     	  print_mysql_error(NULL);
           return EXIT_FAILURE;
        }
@@ -300,14 +297,10 @@ insert_directory(Directory_Info directory_info)
  * 插入磁盘信息
  */
 int
-insert_disk(Disk_Info disk_info)
+insert_disk(db_disk_info disk_info)
  {
-      char sql[MAX_BUF_SIZE];
-      memset(sql, 0, sizeof(sql));
 
-      sprintf(sql, "INSERT INTO disk_info(disk_name, disk_uuid, disk_type, disk_capacity, disk_used, recent_use_time, permisssion, disk_status) VALUES \ ('%s', '%s', '%s', %f, %f, '%s', %d, %d)", disk_info.disk_name, disk_info.disk_uuid, disk_info.disk_type, disk_info.disk_capacity, disk_info.disk_used, disk_info.recent_use_time, disk_info.permission, disk_info.disk_status);
-
-      if (mysql_query(g_conn, sql) != 0){
+      if (db_disk_info__insert (disk_info) != 0){
     	  print_mysql_error(NULL);
           return EXIT_FAILURE;
        }
@@ -321,14 +314,10 @@ insert_disk(Disk_Info disk_info)
  * 插入文件信息
  */
 int
-insert_file(File_Info file_info)
+insert_file(db_file_info file_info)
  {
-      char sql[MAX_BUF_SIZE];
-      memset(sql, 0, sizeof(sql));
 
-      sprintf(sql, "INSERT INTO file_info(file_name, disk_uuid, directory_id, disk_name, md5, file_size, location, time, recent_use_time, permission, file_type, accessed_time) VALUES \ ('%s', '%s', %d, '%s', '%s', %f, '%s', '%s', '%s', %d, %d, %d)", file_info.file_name, file_info.disk_uuid, file_info.directory_id, file_info.disk_name, file_info.md5, file_info.file_size, file_info.location, file_info.time, file_info.recent_use_time, file_info.permission, file_info.file_type, file_info.accessed_time);
-
-      if (mysql_query(g_conn, sql) != 0){
+      if (db_file_info__insert (file_info) != 0){
     	  print_mysql_error(NULL);
           return EXIT_FAILURE;
        }
@@ -343,7 +332,7 @@ insert_file(File_Info file_info)
  * 包括 `directory_size`, `recent_use_time`, `accessed_time`, `file_number`
  */
 void
-update_directory(Directory_Info directory_info) {
+update_directory(db_directory_info directory_info) {
 	char sql[MAX_BUF_SIZE];
 	memset(sql, 0, sizeof(sql));
 
@@ -367,7 +356,7 @@ update_directory(Directory_Info directory_info) {
  * 包括 `disk_used`, `recent_use_time`, `disk_status`
  */
 void
-update_disk(Disk_Info disk_info) {
+update_disk(db_disk_info disk_info) {
 	char sql[MAX_BUF_SIZE];
 	memset(sql, 0, sizeof(sql));
 
@@ -390,7 +379,7 @@ update_disk(Disk_Info disk_info) {
  * 包括 `recent_use_time`, `accessed_time`
  */
 void
-update_file(File_Info file_info) {
+update_file(db_file_info file_info) {
 	char sql[MAX_BUF_SIZE];
 	memset(sql, 0, sizeof(sql));
 
