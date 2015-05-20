@@ -10,7 +10,7 @@ char g_host_name[MAX_BUF_SIZE];
 char g_user_name[MAX_BUF_SIZE];
 char g_password[MAX_BUF_SIZE];
 char g_db_name[MAX_BUF_SIZE];
-unsigned int g_db_port = 3306;
+char g_db_port[MAX_BUF_SIZE];
 
 /**
  * 初始化数据库连接
@@ -23,13 +23,13 @@ init_mysql() {
 	GetProfileString("./etc/ast3_db_info.conf", "DB_INFO", "UserName", g_user_name);
 	GetProfileString("./etc/ast3_db_info.conf", "DB_INFO", "Password", g_password);
 	GetProfileString("./etc/ast3_db_info.conf", "DB_INFO", "DBName", g_db_name);
-//	GetProfileString("./etc/ast3_db_info.conf", "DB_INFO", "DBPort", g_db_port);
+	GetProfileString("./etc/ast3_db_info.conf", "DB_INFO", "DBPort", g_db_port);
 
 	//初始化
     g_conn = mysql_init(NULL);
 
     //连接数据库
-    if(!mysql_real_connect(g_conn, g_host_name, g_user_name, g_password, g_db_name, g_db_port, NULL, 0)) // 如果失败
+    if(!mysql_real_connect(g_conn, g_host_name, g_user_name, g_password, g_db_name, atoi(g_db_port), NULL, 0)) // 如果失败
         return EXIT_FAILURE;
 
     return EXIT_SUCCESS; // 返回成功
@@ -259,20 +259,7 @@ get_directory_info(MYSQL_ROW g_row){
  */
 Disk_Info
 get_disk_info(MYSQL_ROW g_row){
-	Disk_Info disk_info;
-	char size[MAX_BUF_SIZE];
-	GetProfileString("./etc/disk_info.conf", "DISK_INFO", "Size", size);
-	int i;
-//	i = atoi(size);
-	for(i=0; i<get_fields(); i++){
-		char value[MAX_BUF_SIZE];
-		memset(value, 0, sizeof(value));
-
-		GetProfileString("./etc/disk_info.conf", "DISK_INFO", "0", value);
-//		disk_info = {value:g_row[i]};
-
-	}
-
+	Disk_Info disk_info = {};
 	memcpy(&disk_info, *g_row, sizeof(disk_info));
     return disk_info;
 }
