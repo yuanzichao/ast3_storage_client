@@ -11,7 +11,6 @@
 
 #include <time.h>
 
-#include "type_def.h"
 #include "sql.h"
 
 
