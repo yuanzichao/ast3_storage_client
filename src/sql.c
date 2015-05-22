@@ -266,14 +266,9 @@ update_directory(db_directory_info *directory_info){
 int
 query_directory_info(char *dirName, char *diskName){
 
-	char *dirId = (char *) malloc(MAX_BUF_SIZE);
-	dirId = get_directory_id(dirName, diskName);
-	free_result();
-
-
 	char sql[MAX_BUF_SIZE];
 	memset(sql, 0, sizeof(sql));
-	sprintf(sql, "SELECT * FROM `file_info` Where directory_id = '%s' AND disk_name = '%s'", dirId, diskName);
+	sprintf(sql, "SELECT * FROM `file_info` Where directory_name = '%s' AND disk_name = '%s'", dirName, diskName);
 
 	if (mysql_query(g_conn, sql)){
 		 print_mysql_error(NULL);
