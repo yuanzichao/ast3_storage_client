@@ -33,7 +33,7 @@ typedef struct db_file_info {
 	int file_id;
 	char * file_name;
 	char * disk_uuid;
-	int directory_id;
+	char * directory_name;
 	char * disk_name;
 	char * md5;
 	int file_size;
