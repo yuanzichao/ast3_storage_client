@@ -130,6 +130,76 @@ int main(void) {
 	free_result();
 
 
+	/***************************************************************************/
+	/************************* 文件操作函数测试 **********************************/
+	/***************************************************************************/
+	printf("测试：获取文件ID\n");
+	char *file_id;
+	file_id = get_file_id("20150424_0001.fits", "20150424", "disk_001");		//获取文件ID
+	printf("file_id==>>%s\n", file_id);
+	free_result();
+
+	printf("测试：获取db_file_info\n");
+	db_file_info *file_info;
+	file_info = db_file_info__new();
+	file_info = get_file_info("20150424_0001.fits", "20150424", "disk_001");	//获取db_file_info
+	printf("file_id==>>%d && file_name==>>%s\n", file_info->file_id, file_info->file_name);
+
+	/*
+	 * 说明：
+	 * 		在插入目录时，需要实时更新文件所在目录及所在磁盘信息，
+	 * 		包括 `directory_size`, `recent_use_time`, `accessed_time`, `file_number`
+	 * 		包括 `disk_used`, `recent_use_time`, `disk_status`，
+	 * 		操作流程：根据directory_name和disk_name获取db_directory_info和db_disk_info, 修改上述属性值，
+	 * 		更新db_directory_info和db_disk_info，分别调用update函数更新数据库。
+	 */
+	printf("测试：插入文件信息\n");
+	db_file_info *file_info_01;
+	file_info_01 = db_file_info__new();
+	file_info_01->file_name = "20150522_0001.fits";
+	file_info_01->disk_uuid = "51bb74393f2646d7bd46b4427ade5e17";
+	file_info_01->directory_name = "20150424";
+	file_info_01->disk_name = "disk_001";
+	file_info_01->md5 = "7F97854DC04C119D461FED14F5D8BB96";
+	file_info_01->file_size = 200;
+	file_info_01->location = "120.00,130.00";
+	cur_time = time(NULL);		//获取系统当前时间并格式化
+	file_info_01->time = cur_time;
+	file_info_01->recent_use_time = cur_time;
+	file_info_01->permission = 1;
+	file_info_01->file_type = 1;
+	file_info_01->accessed_time = 0;
+	insert_file(file_info_01);		//插入文件信息
+
+	/*
+	 * 说明：
+	 * 		在更新文件信息时，如果涉及目录和磁盘信息变化，需要实时更新文件所在目录及所在磁盘信息，
+	 * 		包括 `directory_size`, `recent_use_time`, `accessed_time`, `file_number`
+	 * 		包括 `disk_used`, `recent_use_time`, `disk_status`，
+	 * 		操作流程：根据directory_name和disk_name获取db_directory_info和db_disk_info, 修改上述属性值，
+	 * 		更新db_directory_info和db_disk_info，分别调用update函数更新数据库。
+	 */
+	printf("测试：更新文件信息\n");
+	file_info->accessed_time +=1;	//访问次数自动加1
+	cur_time = time(NULL);
+	file_info->recent_use_time = cur_time;
+	update_file(file_info);			//更新文件信息
+
+	/*
+	 * 说明：
+	 * 		在查询文件信息时，如果涉及目录和磁盘信息变化，需要实时更新文件所在目录及所在磁盘信息，
+	 * 		包括 `directory_size`, `recent_use_time`, `accessed_time`, `file_number`
+	 * 		包括 `disk_used`, `recent_use_time`, `disk_status`，
+	 * 		操作流程：根据directory_name和disk_name获取db_directory_info和db_disk_info, 修改上述属性值，
+	 * 		更新db_directory_info和db_disk_info，分别调用update函数更新数据库，
+	 * 		并且需要更新文件信息，包括 `recent_use_time`, `accessed_time`。
+	 */
+	printf("测试：查询文件信息\n");
+	query_file_info("20150424_0001.fits", "20150424", "disk_001");	//查询文件信息
+	print_result();
+	free_result();
+
+
     close_db(); // 关闭链接
 
     return EXIT_SUCCESS;
