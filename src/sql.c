@@ -288,7 +288,7 @@ get_file_id(char *fileName, char *dirName, char *diskName){
 
 	char sql[MAX_BUF_SIZE];
 	memset(sql, 0, sizeof(sql));
-	sprintf(sql, "SELECT file_id FROM `file_info` Where file_name = `%s` AND directory_name = '%s' AND disk_name = '%s'", fileName, dirName, diskName);
+	sprintf(sql, "SELECT file_id FROM `file_info` Where file_name = '%s' AND directory_name = '%s' AND disk_name = '%s'", fileName, dirName, diskName);
 
 	if (mysql_query(g_conn, sql)){
 		 print_mysql_error(NULL);
@@ -316,7 +316,7 @@ get_file_info(char *fileName, char *dirName, char *diskName){
 
 	//获取磁盘ID
 	char *file_id = (char *) malloc(MAX_BUF_SIZE);
-	file_id = get_file_info(fileName, dirName, diskName);
+	file_id = get_file_id(fileName, dirName, diskName);
 	free_result();
 
 	//采用orm获取file_info
