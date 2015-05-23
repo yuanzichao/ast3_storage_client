@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 #include "sql.h"
 #include "utils/read_conf.h"
@@ -151,7 +152,19 @@ insert_disk(db_disk_info *disk_info){
 void
 update_disk(db_disk_info *disk_info) {
 
-	int res = db_disk_info__update(disk_info);
+	char sql[MAX_BUF_SIZE];
+	memset(sql, 0, sizeof(sql));
+
+	//格式化时间
+	struct tm * tm_local = localtime(&disk_info->recent_use_time);
+	char str_f_t [MAX_BUF_SIZE];
+	strftime(str_f_t, sizeof(str_f_t), "%G-%m-%d %H:%M:%S", tm_local);
+
+    sprintf(sql, "UPDATE `disk_info` SET disk_used = %d, recent_use_time = '%s', disk_status = %d WHERE  disk_id = %d",
+    		disk_info->disk_used, str_f_t, disk_info->disk_status, disk_info->disk_id);
+
+
+	int res = mysql_query(g_conn, sql);
 	if (!res) {
 		printf("Update %lu rows\n", (unsigned long)mysql_affected_rows(g_conn));
 	} else {
@@ -251,7 +264,21 @@ insert_directory(db_directory_info *directory_info){
 void
 update_directory(db_directory_info *directory_info){
 
-	int res = db_directory_info__update(directory_info);
+	char sql[MAX_BUF_SIZE];
+	memset(sql, 0, sizeof(sql));
+
+	//格式化时间
+	struct tm * tm_local = localtime(&directory_info->recent_use_time);
+	char str_f_t [MAX_BUF_SIZE];
+	strftime(str_f_t, sizeof(str_f_t), "%G-%m-%d %H:%M:%S", tm_local);
+
+    sprintf(sql, "UPDATE `directory_info` SET directory_size = %d, recent_use_time = '%s', accessed_time = %d, file_number = %d WHERE  directory_id = %d",
+    		directory_info->directory_size, str_f_t,
+			directory_info->accessed_time, directory_info->file_number,
+			directory_info->directory_id);
+
+
+	int res = mysql_query(g_conn, sql);
 	if (!res) {
 		printf("Update %lu rows\n", (unsigned long)mysql_affected_rows(g_conn));
 	} else {
@@ -350,8 +377,19 @@ insert_file(db_file_info *file_info){
  */
 void
 update_file(db_file_info *file_info){
+	char sql[MAX_BUF_SIZE];
+	memset(sql, 0, sizeof(sql));
 
-	int res = db_file_info__update(file_info);
+	//格式化时间
+	struct tm * tm_local = localtime(&file_info->recent_use_time);
+	char str_f_t [MAX_BUF_SIZE];
+	strftime(str_f_t, sizeof(str_f_t), "%G-%m-%d %H:%M:%S", tm_local);
+
+	sprintf(sql, "UPDATE `file_info` SET recent_use_time = '%s', accessed_time = %d WHERE  file_id = %d",
+			str_f_t, file_info->accessed_time, file_info->file_id);
+
+
+	int res = mysql_query(g_conn, sql);
 	if (!res) {
 		printf("Update %lu rows\n", (unsigned long)mysql_affected_rows(g_conn));
 	} else {
