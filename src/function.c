@@ -7,6 +7,7 @@
 
 #include"test_sql.h"
 #include"sql.h"
+#include<stdio.h>
 
 /*
  * format()：命令预处理
