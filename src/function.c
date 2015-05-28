@@ -4,9 +4,17 @@
  *  Created on: 2015年5月28日
  *      Author: jermaine
  */
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include"sql.h"
 
 #include"test_sql.h"
-#include"sql.h"
+
+int key;
+char* currentDisk;
+char* currentDirectory;
 
 /*
  * format()：命令预处理
