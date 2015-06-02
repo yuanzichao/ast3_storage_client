@@ -1,20 +1,17 @@
 /*
- * function.c
+ * virtualdirectory.c
  *
  *  Created on: 2015年5月28日
  *      Author: jermaine
  */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 #include"sql.h"
+#include"virtualdirectory.h"
 
-#include"test_sql.h"
-
-int key;
-char* currentDisk;
-char* currentDirectory;
 
 /*
  * format()：命令预处理
@@ -22,24 +19,61 @@ char* currentDirectory;
  * 返回值：基本上需要两个：命令本身及所带参数（ls -l 或者 cd 目录名）或者定义全局变量在函数中赋值
  *
  */
-void format(char* command){
+int format(char* input){
 
-	if(strcmp(command,"show")==0)
+	char* newInput;
+	newInput=strtok(input,"\n");
+
+	char* command;
+	char* parameter1;
+	char* parameter2;
+	char* parameter3;
+
+	command=strtok(newInput," ");
+	parameter1=strtok(NULL," ");
+	parameter2=strtok(NULL," ");
+	parameter3=strtok(NULL," ");
+	printf("%s\n",command);
+
+
+	if((strcmp(command,"show")==0)&&(parameter1==NULL))
+	{
 		key=0;
-	else if(strcmp(command,"use")==0)
+		//printf("s%\n",command);
+	}
+	else if((strcmp(command,"use")==0)&&(parameter1!=NULL)&&(parameter2==NULL))
+	{
 		key=1;
-	else if(strcmp(command,"list")==0)
+		currentDisk=parameter1;
+	}
+	else if((strcmp(command,"list")==0)&&(parameter1==NULL))
+	{
 		key=2;
-	else if(strcmp(command,"ast3cd")==0)
+	}
+	else if((strcmp(command,"ast3cd")==0)&&(parameter1!=NULL)&&(parameter2==NULL))
+	{
 		key=3;
-	else if(strcmp(command,"ast3ls")==0)
-	    key=4;
-	else if(strcmp(command,"ast3pwd")==0)
+		currentDirectory=parameter1;
+	}
+	else if((strcmp(command,"ast3ls")==0)&&(parameter1==NULL))
+	{
+		key=4;
+	}
+	else if((strcmp(command,"ast3pwd")==0)&&(parameter1==NULL))
+	{
 		key=5;
-	else if(strcmp(command,"query")==0)
+	}
+	else if((strcmp(command,"query")==0)&&(parameter1!=NULL)&&(parameter2!=NULL)&&(parameter3==NULL))
+	{
 		key=6;
+
+	}
 	else
+	{
 		key=7;
+	}
+	return key;
+
 }//定义好之后反向修改主函数调用
 
 
@@ -63,13 +97,13 @@ void excute_show(){
  * execute_use(char* diskName):执行use操作
  * 参数：char* diskName
  * 返回值：无
- * 功能描述：进入指定磁盘
- */
+ * 功能描述：进入指定磁盘"
+
 void excute_use(char* diskName){
 
 	currentDisk=diskName;
 
-}
+} */
 
 
 /*
@@ -78,9 +112,9 @@ void excute_use(char* diskName){
  * 返回值：无
  * 功能描述：列出指定磁盘下的目录信息
  */
-void excute_list(){
+void excute_list(char* diskName){
 
-//	query_disks_info(diskName);  //查询目录信息
+	query_disks_info(diskName);  //查询目录信息
 	print_result();              //打印结果
 	free_result();               //释放结果集
 
@@ -92,12 +126,12 @@ void excute_list(){
  * 参数：char* dirName
  * 返回值：无
  * 功能描述：切换当前工作目录
- */
+
 void excute_cd(char* dirName){
 
 	currentDirectory=dirName;
 
-}
+}*/
 
 
 /*
@@ -106,7 +140,7 @@ void excute_cd(char* dirName){
  * 返回值：无
  * 功能描述：在终端显示当前目录结构
  */
-void execute_ls(char* directory){
+void excute_ls(){
 
 	query_directory_info(currentDirectory,currentDisk);//查询当前目录内文件和目录信息
 	print_result();       //打印结果
@@ -120,12 +154,12 @@ void execute_ls(char* directory){
  * 参数：无
  * 返回值：无
  * 功能描述：显示当前工作目录
- */
+
 void excute_pwd(){
 
 	printf(currentDisk, " ",currentDirectory,"\n");
 
-}
+}*/
 
 
 /*
@@ -158,6 +192,4 @@ void excute_help(){
 	printf("query 日期 日期    检索日期范围内的文件\n");
 
 }
-
-
 
