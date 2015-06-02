@@ -13,8 +13,6 @@
 //主函数
 int main()
 {
-	char* currentDisk1;
-	char* currentDirectory1;
 
 	init_mysql();//初始化数据库
 
@@ -47,10 +45,9 @@ int main()
 			case 1:
 				//excute_use(currentDisk);    //执行use操作
 				printf("Disk changed\n");
-				currentDisk1 = currentDisk;
 				break;
 			case 2:
-				excute_list(currentDisk1);
+				excute_list(currentDisk);
 				break;
 			case 3:
 				//excute_cd(currentDirectory);
