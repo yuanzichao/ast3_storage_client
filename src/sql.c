@@ -336,6 +336,33 @@ get_file_id(char *fileName, char *dirName, char *diskName){
 
 
 /**
+ **根据日期检索文件
+
+char*
+query_file_id(char *dirName, char *diskName，datetime time1,datetime time2){
+
+	char sql[MAX_BUF_SIZE];
+	memset(sql, 0, sizeof(sql));
+	sprintf(sql, "SELECT file_id FROM `file_info` Where directory_name = '%s' AND disk_name = '%s' AND time >= '%s' AND time <= '%s'", dirName, diskName,time1,time2);
+
+	if (mysql_query(g_conn, sql)){
+		 print_mysql_error(NULL);
+	}
+
+	g_res = mysql_store_result(g_conn); // 从服务器传送结果集至本地，mysql_use_result直接使用服务器上的记录集
+
+	char *file_id = (char *) malloc(MAX_BUF_SIZE);
+	int i;
+	while ((g_row = mysql_fetch_row(g_res))) {
+		for(i=0; i<get_fields(); i++){
+			sprintf(file_id, "%s", g_row[i]);   //获取目录ID
+		}
+	}
+
+	return file_id;
+}*/
+
+/**
  * 获取db_file_info
  */
 db_file_info*
