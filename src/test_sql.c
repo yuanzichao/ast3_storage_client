@@ -22,16 +22,16 @@ int main()
 	char parameter1[100];
 	char parameter2[100];
 */
-	char* input;
-	//char input[100];
+//	char* input;
+	char input[100];
     printf("您可通过help获取帮助\n");
 
 	while(1){
 
-        input=NULL;
+        memset(input, 0,sizeof(char)*100);
 		fgets(input,100,stdin);   //获取用户输入指令，以回车结束
 
-		key=format(input);//命令解析：主要对input进行格式化处理
+		key=format(&input);//命令解析：主要对input进行格式化处理
 		//scanf("%s",&input);
 		//if(strcmp(input,"show")==0)
 			//key=0;
