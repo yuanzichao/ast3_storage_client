@@ -16,6 +16,9 @@ int key;
 char* currentDisk;
 char* currentDirectory;
 
+char* startTime;
+char* endTime;
+
 
 
 
@@ -31,5 +34,5 @@ void excute_list();
 void excute_cd(char* dirName);
 void excute_ls(char* diskName, char* dirName);
 void excute_pwd();
-void excute_query();
+void query_time(char *start_time, char * end_time);
 void excute_help();

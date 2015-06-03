@@ -50,11 +50,11 @@ int main()
 				break;
 			case 5:
 				//excute_pwd();
-				printf("%s\n",currentDirectory);
+				printf("%s\n", curr_dir);
 				break;
-			//case 6:
-				//excute_query();
-				//break;
+			case 6:
+				query_time(startTime, endTime);
+				break;
 			case 7:
 				excute_help();
 				break;
