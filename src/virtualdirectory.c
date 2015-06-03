@@ -12,6 +12,8 @@
 #include"sql.h"
 #include"virtualdirectory.h"
 
+char* currentDisk;
+char* currentDirectory;
 
 /*
  * format()：命令预处理
@@ -39,7 +41,6 @@ int format(char* input){
 	if((strcmp(command,"show")==0)&&(parameter1==NULL))
 	{
 		key=0;
-		//printf("s%\n",command);
 	}
 	else if((strcmp(command,"use")==0)&&(parameter1!=NULL)&&(parameter2==NULL))
 	{
@@ -140,9 +141,9 @@ void excute_cd(char* dirName){
  * 返回值：无
  * 功能描述：在终端显示当前目录结构
  */
-void excute_ls(){
+void excute_ls(char* diskName, char* dirName){
 
-	query_directory_info(currentDirectory,currentDisk);//查询当前目录内文件和目录信息
+	query_directory_info(dirName, diskName);//查询当前目录内文件和目录信息
 	print_result();       //打印结果
 	free_result();        //释放结果集
 
@@ -179,17 +180,17 @@ void excute_query(date date1,date date2){
  * execute_help():执行query操作
  * 参数：无
  * 返回值：无
- * 功能描述：显示当前工作目录
+ * 功能描述：显示帮助信息
  */
 void excute_help(){
 	printf("本软件为虚拟目录，您可通过以下指令进行操作\n");
-	printf("show       列出所有磁盘信息\n");
-	printf("use 磁盘名       进入指定磁盘\n");
-	printf("list    列出所在磁盘下的目录信息\n");
-	printf("ast3cd 目录名    切换到指定目录\n");
-	printf("ast3ls 目录名    列出当前目录下的文件信息\n");
-	printf("ast3pwd      显示当前工作目录\n");
-	printf("query 日期 日期    检索日期范围内的文件\n");
+	printf("show            	列出所有磁盘信息\n");
+	printf("use 磁盘名       	进入指定磁盘\n");
+	printf("list            	列出所在磁盘下的目录信息\n");
+	printf("ast3cd 目录名    	切换到指定目录\n");
+	printf("ast3ls 目录名    	列出当前目录下的文件信息\n");
+	printf("ast3pwd         	显示当前工作目录\n");
+	printf("query 日期 日期    	检索日期范围内的文件\n");
 
 }
 

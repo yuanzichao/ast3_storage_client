@@ -6,10 +6,6 @@
 #include"virtualdirectory.h"
 #include"sql.h"
 
-//int key;
-//char* currentDisk;
-//char* currentDirectory;
-
 //主函数
 int main()
 {
@@ -17,13 +13,9 @@ int main()
 	init_mysql();//初始化数据库
 
 	//声明命令
-
-/*	char command[100];
-	char parameter1[100];
-	char parameter2[100];
-*/
-//	char* input;
 	char input[100];
+	char curr_disk[100];
+	char curr_dir[100];
     printf("您可通过help获取帮助\n");
 
 	while(1){
@@ -32,9 +24,6 @@ int main()
 		fgets(input,100,stdin);   //获取用户输入指令，以回车结束
 
 		key=format(&input);//命令解析：主要对input进行格式化处理
-		//scanf("%s",&input);
-		//if(strcmp(input,"show")==0)
-			//key=0;
 
 		//执行响应的动作，key为命令解析后结果，决定调用哪个函数
 		switch (key) {
@@ -45,16 +34,19 @@ int main()
 			case 1:
 				//excute_use(currentDisk);    //执行use操作
 				printf("Disk changed\n");
+				memset(curr_disk, 0, sizeof(char)*100);
+				memcpy(curr_disk, currentDisk, strlen(currentDisk));
 				break;
 			case 2:
-				excute_list(currentDisk);
+				excute_list(curr_disk);
 				break;
 			case 3:
-				//excute_cd(currentDirectory);
 				printf("Directory changed\n");
+				memset(curr_dir, 0, sizeof(char)*100);
+				memcpy(curr_dir, currentDirectory, strlen(currentDirectory));
 				break;
 			case 4:
-				excute_ls();
+				excute_ls(curr_disk, curr_dir);
 				break;
 			case 5:
 				//excute_pwd();

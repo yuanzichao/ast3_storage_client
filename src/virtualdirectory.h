@@ -29,7 +29,7 @@ void excute_show();
 void excute_use(char* diskName);
 void excute_list();
 void excute_cd(char* dirName);
-void excute_ls();
+void excute_ls(char* diskName, char* dirName);
 void excute_pwd();
 void excute_query();
 void excute_help();
