@@ -44,7 +44,7 @@ int query_file_by_time(char *start_time, char * end_time);//根据时间查询�
 
 void delete();		//删除记录
 
-void print_result();		//打印结果
+int print_result();		//打印结果
 void print_mysql_error(const char *msg);		//打印最后一次错误
 int get_rows();	//获取数据集行数
 int get_fields();	//获取数据集列数

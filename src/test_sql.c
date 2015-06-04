@@ -18,6 +18,11 @@ int main()
 	char curr_dir[100];
     printf("您可通过help获取帮助\n");
 
+    memset(curr_disk, 0, sizeof(char)*100);
+    memcpy(curr_disk, ">", sizeof(char)*1);
+    memset(curr_dir, 0, sizeof(char)*100);
+    memcpy(curr_dir, ">", sizeof(char)*1);
+
 	while(1){
 
         memset(input, 0,sizeof(char)*100);
@@ -59,6 +64,18 @@ int main()
 				excute_help();
 				break;
 		}//指令执行结束，重新循环
+
+		//printf("\n");
+		if(curr_disk!=NULL)
+		{
+			printf("%s",curr_disk);
+			printf("%s",">");
+			if(curr_dir!=NULL)
+			{
+				printf("%s",curr_dir);
+				printf("%s",">");
+			}
+		}
 
 	}
 

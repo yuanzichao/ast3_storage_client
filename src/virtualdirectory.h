@@ -5,6 +5,9 @@
  *      Author: jermaine
  */
 
+#include <mysql/mysql.h>
+#include "orm/db.h"
+
 #ifndef SRC_VIRTUALDIRECTORY_H_
 #define SRC_VIRTUALDIRECTORY_H_
 
@@ -19,7 +22,7 @@ char* currentDirectory;
 char* startTime;
 char* endTime;
 
-
+MYSQL_ROW g_row1; // 字符串数组，mysql 记录行
 
 
 //函数声明区

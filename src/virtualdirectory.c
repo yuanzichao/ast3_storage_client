@@ -32,7 +32,7 @@ int format(char* input){
 	parameter1=strtok(NULL," ");
 	parameter2=strtok(NULL," ");
 	parameter3=strtok(NULL," ");
-	printf("%s\n",command);
+	//printf("%s\n",command);
 
 
 	if((strcmp(command,"show")==0)&&(parameter1==NULL))
@@ -87,6 +87,11 @@ void excute_show(){
 
 	query_disks();     //查询所有磁盘信息
 	print_result();    //打印结果
+	//printf("%d",print_result());
+	if((print_result())!=13)
+	{
+		printf("%s\n","There is no disk information");
+	}
 	free_result();     //释放结果集
 
 }
@@ -115,6 +120,11 @@ void excute_list(char* diskName){
 
 	query_disks_info(diskName);  //查询目录信息
 	print_result();              //打印结果
+	//printf("%d",print_result());
+	if((print_result())!=11)
+	{
+		printf("%s\n","There are no directories in the disk");
+	}
 	free_result();               //释放结果集
 
 }
@@ -143,6 +153,11 @@ void excute_ls(char* diskName, char* dirName){
 
 	query_directory_info(dirName, diskName);//查询当前目录内文件和目录信息
 	print_result();       //打印结果
+	//printf("%d",print_result());
+	if((print_result())!=13)
+	{
+		printf("%s\n","There are no files in the directory");
+	}
 	free_result();        //释放结果集
 
 }
@@ -170,8 +185,14 @@ void excute_pwd(){
 void query_time(char *start_time,  char *end_time){
 
 	query_file_by_time(start_time, end_time);//根据时间查询文件信息
-	print_result();       //打印结果
+	print_result();		  //打印结果
+	//printf("%d",print_result());
+	if((print_result())!=13)
+	{
+		printf("%s\n","No file was retrieved");
+	}
 	free_result();        //释放结果集
+
 }
 
 
@@ -188,7 +209,7 @@ void excute_help(){
 	printf("use 磁盘名\t\t\t进入指定磁盘\n");
 	printf("list\t\t\t\t列出所在磁盘下的目录信息\n");
 	printf("ast3cd 目录名\t\t\t切换到指定目录\n");
-	printf("ast3ls 目录名\t\t\t列出当前目录下的文件信息\n");
+	printf("ast3ls \t\t\t\t列出当前目录下的文件信息\n");
 	printf("ast3pwd\t\t\t\t显示当前工作目录\n");
 	printf("query 开始日期 终止日期\t\t检索日期范围内的文件\n");
 
