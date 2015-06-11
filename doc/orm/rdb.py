@@ -17,11 +17,13 @@ except:
 
 class RType:
 	T_INT     = 1
-	T_STRING  = 2
-	T_DATA    = 3
-	T_TIMESTAMP = 4
+	T_DOUBLE  = 2
+	T_STRING  = 3
+	T_DATA    = 4
+	T_TIMESTAMP = 5
 	cnv = {
 		T_INT      :("int","MYSQL_TYPE_LONG", "sizeof(int)", "0", "copyval_c2mysql_int", "copyval_mysql2c_int",False),
+                T_DOUBLE   :("double","MYSQL_TYPE_DOUBLE", "sizeof(double)", "0", "copyval_c2mysql_double", "copyval_mysql2c_double",False),
 		T_STRING   :("char *","MYSQL_TYPE_STRING", "%d + 1", "%d", "copyval_c2mysql_char", "copyval_mysql2c_char", True),
 		T_TIMESTAMP:("time_t","MYSQL_TYPE_DATETIME", "sizeof (MYSQL_TIME)", "0", "copyval_c2mysql_time", "copyval_mysql2c_time", False),
 		T_DATA     :("void*","MYSQL_TYPE_BLOB", "100", "100", "copyval_c2mysql_char", "copyval_mysql2c_char", True)}
@@ -116,6 +118,7 @@ class RDb:
 
 		out.write ("static int copyval_c2mysql_int (int *val, MYSQL_BIND* bnd)\n{\n\tmemcpy (bnd->buffer, val, sizeof (int));\n\treturn (0);\n}\n");
 		out.write ("static int copyval_c2mysql_long (long *val, MYSQL_BIND* bnd)\n{\n\tmemcpy (bnd->buffer, val, sizeof (long));\n\treturn (0);\n}\n");
+                out.write ("static int copyval_c2mysql_double (double *val, MYSQL_BIND* bnd)\n{\n\tmemcpy (bnd->buffer, val, sizeof (double));\n\treturn (0);\n}\n");
 		out.write ("static int copyval_c2mysql_char (char **val, MYSQL_BIND* bnd)\n{\n\tstrncpy (bnd->buffer, * val, bnd->buffer_length);if (bnd->length) *(unsigned int*)bnd->length = (val && *val)?strlen (*val):0;\n\treturn (0);\n}\n");
 		out.write ("static int copyval_c2mysql_time (time_t *val, MYSQL_BIND* bnd)\n{\n\tstruct tm *t; MYSQL_TIME *m;\n\tt = localtime ((const time_t*) val); m = (MYSQL_TIME*)bnd->buffer; memset (m, 0, sizeof (MYSQL_TIME));\n\tm->time_type = MYSQL_TIMESTAMP_DATETIME;\n\tm->year = t->tm_year + 1900; m->month = t->tm_mon + 1; m->day = t->tm_mday; m->hour = t->tm_hour; m->minute = t->tm_min; m->second = t->tm_sec;\n\treturn (0);\n}\n");
 
@@ -123,6 +126,7 @@ class RDb:
 
 		out.write ("static int copyval_mysql2c_int (MYSQL_BIND* bnd, int *i)\n{\n\tint *val;\n\t*i = * (int*) bnd->buffer;\n\treturn (0);\n}\n");
 		out.write ("static int copyval_mysql2c_long (MYSQL_BIND* bnd, long *i)\n{\n\tlong *val;\n\t*i = * (long*) bnd->buffer;\n\treturn (0);\n}\n");
+                out.write ("static int copyval_mysql2c_double (MYSQL_BIND* bnd, double *i)\n{\n\tdouble *val;\n\t*i = * (double*) bnd->buffer;\n\treturn (0);\n}\n");
 		out.write ("static int copyval_mysql2c_time (MYSQL_BIND* bnd, time_t *i)\n{\n\tMYSQL_TIME *m;struct tm t;\n\tm = (MYSQL_TIME*)bnd->buffer;\n\tmemset (& t, 0, sizeof (struct tm));\n\tt.tm_year = m->year - 1900; t.tm_mon = m->month - 1; t.tm_mday = m->day;\n\tt.tm_hour = m->hour;\n\tt.tm_min = m->minute;\n\tt.tm_sec = m->second; *i = mktime (& t);\n\treturn (0);\n}\n");
 
 		out.write ("int %s%s_init (MYSQL *mysql)\n{\n" % (self.prefix, self.name))
@@ -731,9 +735,9 @@ class RDb_MySQL (RDb):
 		elif stype.startswith ("enum("):
 			type.type = RType.T_INT
 		elif stype.startswith ("double unsigned"):
-			type.type = RType.T_INT
+			type.type = RType.T_DOUBLE
 		elif stype.startswith ("double"):
-			type.type = RType.T_INT
+			type.type = RType.T_DOUBLE
 		elif stype.startswith ("int"):
 			type.type = RType.T_INT
 		elif stype.startswith ("char"):
