@@ -11,7 +11,7 @@ typedef struct db_directory_info {
 	char * disk_uuid;
 	char * disk_name;
 	int parent_id;
-	int directory_size;
+	double directory_size;
 	time_t time;
 	time_t recent_use_time;
 	int permission;
@@ -23,8 +23,8 @@ typedef struct db_disk_info {
 	char * disk_name;
 	char * disk_uuid;
 	char * disk_type;
-	int disk_capacity;
-	int disk_used;
+	double disk_capacity;
+	double disk_used;
 	time_t recent_use_time;
 	int permisssion;
 	int disk_status;
@@ -36,8 +36,9 @@ typedef struct db_file_info {
 	char * directory_name;
 	char * disk_name;
 	char * md5;
-	int file_size;
-	char * location;
+	double file_size;
+	double ra_val;
+	double dec_val;
 	time_t time;
 	time_t recent_use_time;
 	int permission;

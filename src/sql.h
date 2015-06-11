@@ -44,7 +44,9 @@ db_file_info* get_file_info(char *fileName, char *dirName, char *diskName);	//�
 int insert_file(db_file_info *file_info);	//插入文件信息
 void update_file(db_file_info *file_info);	//更新文件信息
 int query_file_info(char *fileName, char *dirName, char *diskName);		//查询文件信息
-int query_file_by_time(char *start_time, char * end_time);//根据时间查询文件信息
+int query_file_by_time(char *start_time, char *end_time);//根据时间查询文件信息
+int query_file_by_location(char *start_ra, char *end_ra, char *start_dec, char *end_dec);		//根据位置查询文件信息
+
 
 
 void delete();		//删除记录

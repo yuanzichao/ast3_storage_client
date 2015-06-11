@@ -553,6 +553,7 @@ query_file_info(char *fileName, char *dirName, char *diskName){
 	return EXIT_SUCCESS;
 }
 
+
 /**
  * 根据时间查询文件信息
  */
@@ -571,6 +572,31 @@ query_file_by_time(char *start_time, char * end_time){
 
 	return EXIT_SUCCESS;
 }
+
+
+/**
+ * 根据位置查询文件信息
+ */
+int
+query_file_by_location(char *start_ra, char *end_ra, char *start_dec, char *end_dec){
+
+	char sql[MAX_BUF_SIZE];
+	memset(sql, 0, sizeof(sql));
+	sprintf(sql, "SELECT * FROM `file_info` Where ra_val >= '%s' AND ra_val <= '%s' AND dec_val >= '%s' AND dec_val <= '%s'",
+			start_ra, end_ra, start_dec, end_dec);
+
+	if (mysql_query(g_conn, sql)){
+		 print_mysql_error(NULL);
+	}
+
+	g_res = mysql_store_result(g_conn); // 从服务器传送结果集至本地，mysql_use_result直接使用服务器上的记录集
+
+	return EXIT_SUCCESS;
+}
+
+
+
+
 /**
  * 删除记录（不提供）
  */

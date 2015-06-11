@@ -32,15 +32,15 @@ struct {
 	MYSQL_STMT *stmt_disk_info_delete;
 	MYSQL_BIND par_disk_info_delete [1];
 	MYSQL_STMT *stmt_file_info_upd;
-	MYSQL_BIND par_file_info_upd [14];
+	MYSQL_BIND par_file_info_upd [15];
 	MYSQL_STMT *stmt_file_info_ins;
-	MYSQL_BIND par_file_info_ins [14];
+	MYSQL_BIND par_file_info_ins [15];
 	MYSQL_STMT *stmt_file_info_save;
-	MYSQL_BIND par_file_info_save [14];
-	MYSQL_BIND res_file_info_load [13];
+	MYSQL_BIND par_file_info_save [15];
+	MYSQL_BIND res_file_info_load [14];
 	MYSQL_STMT *stmt_file_info_get_by_id;
 	MYSQL_BIND par_file_info_get_by_id [1];
-	MYSQL_BIND res_file_info_get_by_id [13];
+	MYSQL_BIND res_file_info_get_by_id [14];
 	MYSQL_STMT *stmt_file_info_delete;
 	MYSQL_BIND par_file_info_delete [1];
 } db_struct;
@@ -52,6 +52,11 @@ static int copyval_c2mysql_int (int *val, MYSQL_BIND* bnd)
 static int copyval_c2mysql_long (long *val, MYSQL_BIND* bnd)
 {
 	memcpy (bnd->buffer, val, sizeof (long));
+	return (0);
+}
+static int copyval_c2mysql_double (double *val, MYSQL_BIND* bnd)
+{
+	memcpy (bnd->buffer, val, sizeof (double));
 	return (0);
 }
 static int copyval_c2mysql_char (char **val, MYSQL_BIND* bnd)
@@ -82,6 +87,12 @@ static int copyval_mysql2c_long (MYSQL_BIND* bnd, long *i)
 {
 	long *val;
 	*i = * (long*) bnd->buffer;
+	return (0);
+}
+static int copyval_mysql2c_double (MYSQL_BIND* bnd, double *i)
+{
+	double *val;
+	*i = * (double*) bnd->buffer;
 	return (0);
 }
 static int copyval_mysql2c_time (MYSQL_BIND* bnd, time_t *i)
@@ -115,8 +126,8 @@ int db_init (MYSQL *mysql)
 	db_struct.res_directory_info_load [4].buffer_type = MYSQL_TYPE_LONG;
 	db_struct.res_directory_info_load [4].buffer = malloc (sizeof(int));
 	db_struct.res_directory_info_load [4].buffer_length = 0;
-	db_struct.res_directory_info_load [5].buffer_type = MYSQL_TYPE_LONG;
-	db_struct.res_directory_info_load [5].buffer = malloc (sizeof(int));
+	db_struct.res_directory_info_load [5].buffer_type = MYSQL_TYPE_DOUBLE;
+	db_struct.res_directory_info_load [5].buffer = malloc (sizeof(double));
 	db_struct.res_directory_info_load [5].buffer_length = 0;
 	db_struct.res_directory_info_load [6].buffer_type = MYSQL_TYPE_DATETIME;
 	db_struct.res_directory_info_load [6].buffer = malloc (sizeof (MYSQL_TIME));
@@ -186,8 +197,8 @@ int db_init (MYSQL *mysql)
 	db_struct.par_directory_info_save [4].buffer_type = MYSQL_TYPE_LONG;
 	db_struct.par_directory_info_save [4].buffer = malloc (sizeof(int));
 	db_struct.par_directory_info_save [4].buffer_length = 0;
-	db_struct.par_directory_info_save [5].buffer_type = MYSQL_TYPE_LONG;
-	db_struct.par_directory_info_save [5].buffer = malloc (sizeof(int));
+	db_struct.par_directory_info_save [5].buffer_type = MYSQL_TYPE_DOUBLE;
+	db_struct.par_directory_info_save [5].buffer = malloc (sizeof(double));
 	db_struct.par_directory_info_save [5].buffer_length = 0;
 	db_struct.par_directory_info_save [6].buffer_type = MYSQL_TYPE_DATETIME;
 	db_struct.par_directory_info_save [6].buffer = malloc (sizeof (MYSQL_TIME));
@@ -237,8 +248,8 @@ int db_init (MYSQL *mysql)
 	db_struct.par_directory_info_upd [4].buffer_type = MYSQL_TYPE_LONG;
 	db_struct.par_directory_info_upd [4].buffer = malloc (sizeof(int));
 	db_struct.par_directory_info_upd [4].buffer_length = 0;
-	db_struct.par_directory_info_upd [5].buffer_type = MYSQL_TYPE_LONG;
-	db_struct.par_directory_info_upd [5].buffer = malloc (sizeof(int));
+	db_struct.par_directory_info_upd [5].buffer_type = MYSQL_TYPE_DOUBLE;
+	db_struct.par_directory_info_upd [5].buffer = malloc (sizeof(double));
 	db_struct.par_directory_info_upd [5].buffer_length = 0;
 	db_struct.par_directory_info_upd [6].buffer_type = MYSQL_TYPE_DATETIME;
 	db_struct.par_directory_info_upd [6].buffer = malloc (sizeof (MYSQL_TIME));
@@ -288,8 +299,8 @@ int db_init (MYSQL *mysql)
 	db_struct.par_directory_info_ins [4].buffer_type = MYSQL_TYPE_LONG;
 	db_struct.par_directory_info_ins [4].buffer = malloc (sizeof(int));
 	db_struct.par_directory_info_ins [4].buffer_length = 0;
-	db_struct.par_directory_info_ins [5].buffer_type = MYSQL_TYPE_LONG;
-	db_struct.par_directory_info_ins [5].buffer = malloc (sizeof(int));
+	db_struct.par_directory_info_ins [5].buffer_type = MYSQL_TYPE_DOUBLE;
+	db_struct.par_directory_info_ins [5].buffer = malloc (sizeof(double));
 	db_struct.par_directory_info_ins [5].buffer_length = 0;
 	db_struct.par_directory_info_ins [6].buffer_type = MYSQL_TYPE_DATETIME;
 	db_struct.par_directory_info_ins [6].buffer = malloc (sizeof (MYSQL_TIME));
@@ -333,11 +344,11 @@ int db_init (MYSQL *mysql)
 	db_struct.res_disk_info_load [3].buffer_type = MYSQL_TYPE_STRING;
 	db_struct.res_disk_info_load [3].buffer = malloc (255 + 1);
 	db_struct.res_disk_info_load [3].buffer_length = 255;
-	db_struct.res_disk_info_load [4].buffer_type = MYSQL_TYPE_LONG;
-	db_struct.res_disk_info_load [4].buffer = malloc (sizeof(int));
+	db_struct.res_disk_info_load [4].buffer_type = MYSQL_TYPE_DOUBLE;
+	db_struct.res_disk_info_load [4].buffer = malloc (sizeof(double));
 	db_struct.res_disk_info_load [4].buffer_length = 0;
-	db_struct.res_disk_info_load [5].buffer_type = MYSQL_TYPE_LONG;
-	db_struct.res_disk_info_load [5].buffer = malloc (sizeof(int));
+	db_struct.res_disk_info_load [5].buffer_type = MYSQL_TYPE_DOUBLE;
+	db_struct.res_disk_info_load [5].buffer = malloc (sizeof(double));
 	db_struct.res_disk_info_load [5].buffer_length = 0;
 	db_struct.res_disk_info_load [6].buffer_type = MYSQL_TYPE_DATETIME;
 	db_struct.res_disk_info_load [6].buffer = malloc (sizeof (MYSQL_TIME));
@@ -398,11 +409,11 @@ int db_init (MYSQL *mysql)
 	db_struct.par_disk_info_save [3].buffer = malloc (255 + 1);
 	db_struct.par_disk_info_save [3].buffer_length = 255;
 	db_struct.par_disk_info_save [3].length = malloc (sizeof (unsigned int));
-	db_struct.par_disk_info_save [4].buffer_type = MYSQL_TYPE_LONG;
-	db_struct.par_disk_info_save [4].buffer = malloc (sizeof(int));
+	db_struct.par_disk_info_save [4].buffer_type = MYSQL_TYPE_DOUBLE;
+	db_struct.par_disk_info_save [4].buffer = malloc (sizeof(double));
 	db_struct.par_disk_info_save [4].buffer_length = 0;
-	db_struct.par_disk_info_save [5].buffer_type = MYSQL_TYPE_LONG;
-	db_struct.par_disk_info_save [5].buffer = malloc (sizeof(int));
+	db_struct.par_disk_info_save [5].buffer_type = MYSQL_TYPE_DOUBLE;
+	db_struct.par_disk_info_save [5].buffer = malloc (sizeof(double));
 	db_struct.par_disk_info_save [5].buffer_length = 0;
 	db_struct.par_disk_info_save [6].buffer_type = MYSQL_TYPE_DATETIME;
 	db_struct.par_disk_info_save [6].buffer = malloc (sizeof (MYSQL_TIME));
@@ -443,11 +454,11 @@ int db_init (MYSQL *mysql)
 	db_struct.par_disk_info_upd [3].buffer = malloc (255 + 1);
 	db_struct.par_disk_info_upd [3].buffer_length = 255;
 	db_struct.par_disk_info_upd [3].length = malloc (sizeof (unsigned int));
-	db_struct.par_disk_info_upd [4].buffer_type = MYSQL_TYPE_LONG;
-	db_struct.par_disk_info_upd [4].buffer = malloc (sizeof(int));
+	db_struct.par_disk_info_upd [4].buffer_type = MYSQL_TYPE_DOUBLE;
+	db_struct.par_disk_info_upd [4].buffer = malloc (sizeof(double));
 	db_struct.par_disk_info_upd [4].buffer_length = 0;
-	db_struct.par_disk_info_upd [5].buffer_type = MYSQL_TYPE_LONG;
-	db_struct.par_disk_info_upd [5].buffer = malloc (sizeof(int));
+	db_struct.par_disk_info_upd [5].buffer_type = MYSQL_TYPE_DOUBLE;
+	db_struct.par_disk_info_upd [5].buffer = malloc (sizeof(double));
 	db_struct.par_disk_info_upd [5].buffer_length = 0;
 	db_struct.par_disk_info_upd [6].buffer_type = MYSQL_TYPE_DATETIME;
 	db_struct.par_disk_info_upd [6].buffer = malloc (sizeof (MYSQL_TIME));
@@ -488,11 +499,11 @@ int db_init (MYSQL *mysql)
 	db_struct.par_disk_info_ins [3].buffer = malloc (255 + 1);
 	db_struct.par_disk_info_ins [3].buffer_length = 255;
 	db_struct.par_disk_info_ins [3].length = malloc (sizeof (unsigned int));
-	db_struct.par_disk_info_ins [4].buffer_type = MYSQL_TYPE_LONG;
-	db_struct.par_disk_info_ins [4].buffer = malloc (sizeof(int));
+	db_struct.par_disk_info_ins [4].buffer_type = MYSQL_TYPE_DOUBLE;
+	db_struct.par_disk_info_ins [4].buffer = malloc (sizeof(double));
 	db_struct.par_disk_info_ins [4].buffer_length = 0;
-	db_struct.par_disk_info_ins [5].buffer_type = MYSQL_TYPE_LONG;
-	db_struct.par_disk_info_ins [5].buffer = malloc (sizeof(int));
+	db_struct.par_disk_info_ins [5].buffer_type = MYSQL_TYPE_DOUBLE;
+	db_struct.par_disk_info_ins [5].buffer = malloc (sizeof(double));
 	db_struct.par_disk_info_ins [5].buffer_length = 0;
 	db_struct.par_disk_info_ins [6].buffer_type = MYSQL_TYPE_DATETIME;
 	db_struct.par_disk_info_ins [6].buffer = malloc (sizeof (MYSQL_TIME));
@@ -536,20 +547,20 @@ int db_init (MYSQL *mysql)
 	db_struct.res_file_info_load [5].buffer_type = MYSQL_TYPE_STRING;
 	db_struct.res_file_info_load [5].buffer = malloc (255 + 1);
 	db_struct.res_file_info_load [5].buffer_length = 255;
-	db_struct.res_file_info_load [6].buffer_type = MYSQL_TYPE_LONG;
-	db_struct.res_file_info_load [6].buffer = malloc (sizeof(int));
+	db_struct.res_file_info_load [6].buffer_type = MYSQL_TYPE_DOUBLE;
+	db_struct.res_file_info_load [6].buffer = malloc (sizeof(double));
 	db_struct.res_file_info_load [6].buffer_length = 0;
-	db_struct.res_file_info_load [7].buffer_type = MYSQL_TYPE_STRING;
-	db_struct.res_file_info_load [7].buffer = malloc (255 + 1);
-	db_struct.res_file_info_load [7].buffer_length = 255;
-	db_struct.res_file_info_load [8].buffer_type = MYSQL_TYPE_DATETIME;
-	db_struct.res_file_info_load [8].buffer = malloc (sizeof (MYSQL_TIME));
+	db_struct.res_file_info_load [7].buffer_type = MYSQL_TYPE_DOUBLE;
+	db_struct.res_file_info_load [7].buffer = malloc (sizeof(double));
+	db_struct.res_file_info_load [7].buffer_length = 0;
+	db_struct.res_file_info_load [8].buffer_type = MYSQL_TYPE_DOUBLE;
+	db_struct.res_file_info_load [8].buffer = malloc (sizeof(double));
 	db_struct.res_file_info_load [8].buffer_length = 0;
 	db_struct.res_file_info_load [9].buffer_type = MYSQL_TYPE_DATETIME;
 	db_struct.res_file_info_load [9].buffer = malloc (sizeof (MYSQL_TIME));
 	db_struct.res_file_info_load [9].buffer_length = 0;
-	db_struct.res_file_info_load [10].buffer_type = MYSQL_TYPE_LONG;
-	db_struct.res_file_info_load [10].buffer = malloc (sizeof(int));
+	db_struct.res_file_info_load [10].buffer_type = MYSQL_TYPE_DATETIME;
+	db_struct.res_file_info_load [10].buffer = malloc (sizeof (MYSQL_TIME));
 	db_struct.res_file_info_load [10].buffer_length = 0;
 	db_struct.res_file_info_load [11].buffer_type = MYSQL_TYPE_LONG;
 	db_struct.res_file_info_load [11].buffer = malloc (sizeof(int));
@@ -557,6 +568,9 @@ int db_init (MYSQL *mysql)
 	db_struct.res_file_info_load [12].buffer_type = MYSQL_TYPE_LONG;
 	db_struct.res_file_info_load [12].buffer = malloc (sizeof(int));
 	db_struct.res_file_info_load [12].buffer_length = 0;
+	db_struct.res_file_info_load [13].buffer_type = MYSQL_TYPE_LONG;
+	db_struct.res_file_info_load [13].buffer = malloc (sizeof(int));
+	db_struct.res_file_info_load [13].buffer_length = 0;
 	db_struct.par_file_info_get_by_id [0].buffer_type = MYSQL_TYPE_LONG;
 	db_struct.par_file_info_get_by_id [0].buffer = malloc (sizeof(int));
 	db_struct.par_file_info_get_by_id [0].buffer_length = 0;
@@ -564,7 +578,7 @@ int db_init (MYSQL *mysql)
 	db_struct.par_file_info_delete [0].buffer = malloc (sizeof(int));
 	db_struct.par_file_info_delete [0].buffer_length = 0;
 	db_struct.stmt_file_info_get_by_id = mysql_stmt_init (mysql);
-	sql = "SELECT file_id, file_name, disk_uuid, directory_name, disk_name, md5, file_size, location, time, recent_use_time, permission, file_type, accessed_time FROM file_info WHERE file_id = ? ";
+	sql = "SELECT file_id, file_name, disk_uuid, directory_name, disk_name, md5, file_size, ra_val, dec_val, time, recent_use_time, permission, file_type, accessed_time FROM file_info WHERE file_id = ? ";
 	ret = mysql_stmt_prepare (db_struct.stmt_file_info_get_by_id , sql, strlen (sql));
 	if (ret) {
 		fprintf (stderr, __FILE__":%d: error (%s)\n", __LINE__, mysql_stmt_error (db_struct.stmt_file_info_get_by_id));
@@ -615,21 +629,20 @@ int db_init (MYSQL *mysql)
 	db_struct.par_file_info_save [5].buffer = malloc (255 + 1);
 	db_struct.par_file_info_save [5].buffer_length = 255;
 	db_struct.par_file_info_save [5].length = malloc (sizeof (unsigned int));
-	db_struct.par_file_info_save [6].buffer_type = MYSQL_TYPE_LONG;
-	db_struct.par_file_info_save [6].buffer = malloc (sizeof(int));
+	db_struct.par_file_info_save [6].buffer_type = MYSQL_TYPE_DOUBLE;
+	db_struct.par_file_info_save [6].buffer = malloc (sizeof(double));
 	db_struct.par_file_info_save [6].buffer_length = 0;
-	db_struct.par_file_info_save [7].buffer_type = MYSQL_TYPE_STRING;
-	db_struct.par_file_info_save [7].buffer = malloc (255 + 1);
-	db_struct.par_file_info_save [7].buffer_length = 255;
-	db_struct.par_file_info_save [7].length = malloc (sizeof (unsigned int));
-	db_struct.par_file_info_save [8].buffer_type = MYSQL_TYPE_DATETIME;
-	db_struct.par_file_info_save [8].buffer = malloc (sizeof (MYSQL_TIME));
+	db_struct.par_file_info_save [7].buffer_type = MYSQL_TYPE_DOUBLE;
+	db_struct.par_file_info_save [7].buffer = malloc (sizeof(double));
+	db_struct.par_file_info_save [7].buffer_length = 0;
+	db_struct.par_file_info_save [8].buffer_type = MYSQL_TYPE_DOUBLE;
+	db_struct.par_file_info_save [8].buffer = malloc (sizeof(double));
 	db_struct.par_file_info_save [8].buffer_length = 0;
 	db_struct.par_file_info_save [9].buffer_type = MYSQL_TYPE_DATETIME;
 	db_struct.par_file_info_save [9].buffer = malloc (sizeof (MYSQL_TIME));
 	db_struct.par_file_info_save [9].buffer_length = 0;
-	db_struct.par_file_info_save [10].buffer_type = MYSQL_TYPE_LONG;
-	db_struct.par_file_info_save [10].buffer = malloc (sizeof(int));
+	db_struct.par_file_info_save [10].buffer_type = MYSQL_TYPE_DATETIME;
+	db_struct.par_file_info_save [10].buffer = malloc (sizeof (MYSQL_TIME));
 	db_struct.par_file_info_save [10].buffer_length = 0;
 	db_struct.par_file_info_save [11].buffer_type = MYSQL_TYPE_LONG;
 	db_struct.par_file_info_save [11].buffer = malloc (sizeof(int));
@@ -640,8 +653,11 @@ int db_init (MYSQL *mysql)
 	db_struct.par_file_info_save [13].buffer_type = MYSQL_TYPE_LONG;
 	db_struct.par_file_info_save [13].buffer = malloc (sizeof(int));
 	db_struct.par_file_info_save [13].buffer_length = 0;
+	db_struct.par_file_info_save [14].buffer_type = MYSQL_TYPE_LONG;
+	db_struct.par_file_info_save [14].buffer = malloc (sizeof(int));
+	db_struct.par_file_info_save [14].buffer_length = 0;
 	db_struct.stmt_file_info_save = mysql_stmt_init (mysql);
-	sql = "REPLACE file_info SET file_id = ? , file_name = ? , disk_uuid = ? , directory_name = ? , disk_name = ? , md5 = ? , file_size = ? , location = ? , time = ? , recent_use_time = ? , permission = ? , file_type = ? , accessed_time = ? ";
+	sql = "REPLACE file_info SET file_id = ? , file_name = ? , disk_uuid = ? , directory_name = ? , disk_name = ? , md5 = ? , file_size = ? , ra_val = ? , dec_val = ? , time = ? , recent_use_time = ? , permission = ? , file_type = ? , accessed_time = ? ";
 	ret = mysql_stmt_prepare (db_struct.stmt_file_info_save, sql, strlen (sql));
 	if (ret) {
 		fprintf (stderr, __FILE__":%d: error (%s)\n", __LINE__, mysql_stmt_error (db_struct.stmt_file_info_save));
@@ -675,21 +691,20 @@ int db_init (MYSQL *mysql)
 	db_struct.par_file_info_upd [5].buffer = malloc (255 + 1);
 	db_struct.par_file_info_upd [5].buffer_length = 255;
 	db_struct.par_file_info_upd [5].length = malloc (sizeof (unsigned int));
-	db_struct.par_file_info_upd [6].buffer_type = MYSQL_TYPE_LONG;
-	db_struct.par_file_info_upd [6].buffer = malloc (sizeof(int));
+	db_struct.par_file_info_upd [6].buffer_type = MYSQL_TYPE_DOUBLE;
+	db_struct.par_file_info_upd [6].buffer = malloc (sizeof(double));
 	db_struct.par_file_info_upd [6].buffer_length = 0;
-	db_struct.par_file_info_upd [7].buffer_type = MYSQL_TYPE_STRING;
-	db_struct.par_file_info_upd [7].buffer = malloc (255 + 1);
-	db_struct.par_file_info_upd [7].buffer_length = 255;
-	db_struct.par_file_info_upd [7].length = malloc (sizeof (unsigned int));
-	db_struct.par_file_info_upd [8].buffer_type = MYSQL_TYPE_DATETIME;
-	db_struct.par_file_info_upd [8].buffer = malloc (sizeof (MYSQL_TIME));
+	db_struct.par_file_info_upd [7].buffer_type = MYSQL_TYPE_DOUBLE;
+	db_struct.par_file_info_upd [7].buffer = malloc (sizeof(double));
+	db_struct.par_file_info_upd [7].buffer_length = 0;
+	db_struct.par_file_info_upd [8].buffer_type = MYSQL_TYPE_DOUBLE;
+	db_struct.par_file_info_upd [8].buffer = malloc (sizeof(double));
 	db_struct.par_file_info_upd [8].buffer_length = 0;
 	db_struct.par_file_info_upd [9].buffer_type = MYSQL_TYPE_DATETIME;
 	db_struct.par_file_info_upd [9].buffer = malloc (sizeof (MYSQL_TIME));
 	db_struct.par_file_info_upd [9].buffer_length = 0;
-	db_struct.par_file_info_upd [10].buffer_type = MYSQL_TYPE_LONG;
-	db_struct.par_file_info_upd [10].buffer = malloc (sizeof(int));
+	db_struct.par_file_info_upd [10].buffer_type = MYSQL_TYPE_DATETIME;
+	db_struct.par_file_info_upd [10].buffer = malloc (sizeof (MYSQL_TIME));
 	db_struct.par_file_info_upd [10].buffer_length = 0;
 	db_struct.par_file_info_upd [11].buffer_type = MYSQL_TYPE_LONG;
 	db_struct.par_file_info_upd [11].buffer = malloc (sizeof(int));
@@ -700,8 +715,11 @@ int db_init (MYSQL *mysql)
 	db_struct.par_file_info_upd [13].buffer_type = MYSQL_TYPE_LONG;
 	db_struct.par_file_info_upd [13].buffer = malloc (sizeof(int));
 	db_struct.par_file_info_upd [13].buffer_length = 0;
+	db_struct.par_file_info_upd [14].buffer_type = MYSQL_TYPE_LONG;
+	db_struct.par_file_info_upd [14].buffer = malloc (sizeof(int));
+	db_struct.par_file_info_upd [14].buffer_length = 0;
 	db_struct.stmt_file_info_upd = mysql_stmt_init (mysql);
-	sql = "UPDATE file_info SET file_id = ? , file_name = ? , disk_uuid = ? , directory_name = ? , disk_name = ? , md5 = ? , file_size = ? , location = ? , time = ? , recent_use_time = ? , permission = ? , file_type = ? , accessed_time = ? WHERE file_id = ? ";
+	sql = "UPDATE file_info SET file_id = ? , file_name = ? , disk_uuid = ? , directory_name = ? , disk_name = ? , md5 = ? , file_size = ? , ra_val = ? , dec_val = ? , time = ? , recent_use_time = ? , permission = ? , file_type = ? , accessed_time = ? WHERE file_id = ? ";
 	ret = mysql_stmt_prepare (db_struct.stmt_file_info_upd, sql, strlen (sql));
 	if (ret) {
 		fprintf (stderr, __FILE__":%d: error (%s)\n", __LINE__, mysql_stmt_error (db_struct.stmt_file_info_upd));
@@ -735,21 +753,20 @@ int db_init (MYSQL *mysql)
 	db_struct.par_file_info_ins [5].buffer = malloc (255 + 1);
 	db_struct.par_file_info_ins [5].buffer_length = 255;
 	db_struct.par_file_info_ins [5].length = malloc (sizeof (unsigned int));
-	db_struct.par_file_info_ins [6].buffer_type = MYSQL_TYPE_LONG;
-	db_struct.par_file_info_ins [6].buffer = malloc (sizeof(int));
+	db_struct.par_file_info_ins [6].buffer_type = MYSQL_TYPE_DOUBLE;
+	db_struct.par_file_info_ins [6].buffer = malloc (sizeof(double));
 	db_struct.par_file_info_ins [6].buffer_length = 0;
-	db_struct.par_file_info_ins [7].buffer_type = MYSQL_TYPE_STRING;
-	db_struct.par_file_info_ins [7].buffer = malloc (255 + 1);
-	db_struct.par_file_info_ins [7].buffer_length = 255;
-	db_struct.par_file_info_ins [7].length = malloc (sizeof (unsigned int));
-	db_struct.par_file_info_ins [8].buffer_type = MYSQL_TYPE_DATETIME;
-	db_struct.par_file_info_ins [8].buffer = malloc (sizeof (MYSQL_TIME));
+	db_struct.par_file_info_ins [7].buffer_type = MYSQL_TYPE_DOUBLE;
+	db_struct.par_file_info_ins [7].buffer = malloc (sizeof(double));
+	db_struct.par_file_info_ins [7].buffer_length = 0;
+	db_struct.par_file_info_ins [8].buffer_type = MYSQL_TYPE_DOUBLE;
+	db_struct.par_file_info_ins [8].buffer = malloc (sizeof(double));
 	db_struct.par_file_info_ins [8].buffer_length = 0;
 	db_struct.par_file_info_ins [9].buffer_type = MYSQL_TYPE_DATETIME;
 	db_struct.par_file_info_ins [9].buffer = malloc (sizeof (MYSQL_TIME));
 	db_struct.par_file_info_ins [9].buffer_length = 0;
-	db_struct.par_file_info_ins [10].buffer_type = MYSQL_TYPE_LONG;
-	db_struct.par_file_info_ins [10].buffer = malloc (sizeof(int));
+	db_struct.par_file_info_ins [10].buffer_type = MYSQL_TYPE_DATETIME;
+	db_struct.par_file_info_ins [10].buffer = malloc (sizeof (MYSQL_TIME));
 	db_struct.par_file_info_ins [10].buffer_length = 0;
 	db_struct.par_file_info_ins [11].buffer_type = MYSQL_TYPE_LONG;
 	db_struct.par_file_info_ins [11].buffer = malloc (sizeof(int));
@@ -760,8 +777,11 @@ int db_init (MYSQL *mysql)
 	db_struct.par_file_info_ins [13].buffer_type = MYSQL_TYPE_LONG;
 	db_struct.par_file_info_ins [13].buffer = malloc (sizeof(int));
 	db_struct.par_file_info_ins [13].buffer_length = 0;
+	db_struct.par_file_info_ins [14].buffer_type = MYSQL_TYPE_LONG;
+	db_struct.par_file_info_ins [14].buffer = malloc (sizeof(int));
+	db_struct.par_file_info_ins [14].buffer_length = 0;
 	db_struct.stmt_file_info_ins = mysql_stmt_init (mysql);
-	sql = "INSERT INTO file_info (file_id, file_name, disk_uuid, directory_name, disk_name, md5, file_size, location, time, recent_use_time, permission, file_type, accessed_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+	sql = "INSERT INTO file_info (file_id, file_name, disk_uuid, directory_name, disk_name, md5, file_size, ra_val, dec_val, time, recent_use_time, permission, file_type, accessed_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 	ret = mysql_stmt_prepare (db_struct.stmt_file_info_ins, sql, strlen (sql));
 	if (ret) {
 		fprintf (stderr, __FILE__":%d: error (%s)\n", __LINE__, mysql_stmt_error (db_struct.stmt_file_info_ins));
@@ -800,7 +820,7 @@ int db_directory_info__save (db_directory_info *record)
 	copyval_c2mysql_char (& record->disk_uuid, & db_struct.par_directory_info_save [2]);
 	copyval_c2mysql_char (& record->disk_name, & db_struct.par_directory_info_save [3]);
 	copyval_c2mysql_int (& record->parent_id, & db_struct.par_directory_info_save [4]);
-	copyval_c2mysql_int (& record->directory_size, & db_struct.par_directory_info_save [5]);
+	copyval_c2mysql_double (& record->directory_size, & db_struct.par_directory_info_save [5]);
 	copyval_c2mysql_time (& record->time, & db_struct.par_directory_info_save [6]);
 	copyval_c2mysql_time (& record->recent_use_time, & db_struct.par_directory_info_save [7]);
 	copyval_c2mysql_int (& record->permission, & db_struct.par_directory_info_save [8]);
@@ -826,7 +846,7 @@ int db_directory_info__delete (db_directory_info *record)
 	copyval_c2mysql_char (& record->disk_uuid, & db_struct.par_directory_info_delete [2]);
 	copyval_c2mysql_char (& record->disk_name, & db_struct.par_directory_info_delete [3]);
 	copyval_c2mysql_int (& record->parent_id, & db_struct.par_directory_info_delete [4]);
-	copyval_c2mysql_int (& record->directory_size, & db_struct.par_directory_info_delete [5]);
+	copyval_c2mysql_double (& record->directory_size, & db_struct.par_directory_info_delete [5]);
 	copyval_c2mysql_time (& record->time, & db_struct.par_directory_info_delete [6]);
 	copyval_c2mysql_time (& record->recent_use_time, & db_struct.par_directory_info_delete [7]);
 	copyval_c2mysql_int (& record->permission, & db_struct.par_directory_info_delete [8]);
@@ -849,7 +869,7 @@ int db_directory_info__update (db_directory_info *record)
 	copyval_c2mysql_char (& record->disk_uuid, & db_struct.par_directory_info_upd [2]);
 	copyval_c2mysql_char (& record->disk_name, & db_struct.par_directory_info_upd [3]);
 	copyval_c2mysql_int (& record->parent_id, & db_struct.par_directory_info_upd [4]);
-	copyval_c2mysql_int (& record->directory_size, & db_struct.par_directory_info_upd [5]);
+	copyval_c2mysql_double (& record->directory_size, & db_struct.par_directory_info_upd [5]);
 	copyval_c2mysql_time (& record->time, & db_struct.par_directory_info_upd [6]);
 	copyval_c2mysql_time (& record->recent_use_time, & db_struct.par_directory_info_upd [7]);
 	copyval_c2mysql_int (& record->permission, & db_struct.par_directory_info_upd [8]);
@@ -872,7 +892,7 @@ int db_directory_info__insert (db_directory_info *record)
 	copyval_c2mysql_char (& record->disk_uuid, & db_struct.par_directory_info_ins [2]);
 	copyval_c2mysql_char (& record->disk_name, & db_struct.par_directory_info_ins [3]);
 	copyval_c2mysql_int (& record->parent_id, & db_struct.par_directory_info_ins [4]);
-	copyval_c2mysql_int (& record->directory_size, & db_struct.par_directory_info_ins [5]);
+	copyval_c2mysql_double (& record->directory_size, & db_struct.par_directory_info_ins [5]);
 	copyval_c2mysql_time (& record->time, & db_struct.par_directory_info_ins [6]);
 	copyval_c2mysql_time (& record->recent_use_time, & db_struct.par_directory_info_ins [7]);
 	copyval_c2mysql_int (& record->permission, & db_struct.par_directory_info_ins [8]);
@@ -910,7 +930,7 @@ db_directory_info *db_directory_info__get_by_id (int directory_id)
 	copyval_mysql2c_char (& db_struct.res_directory_info_load [2], & rec->disk_uuid);
 	copyval_mysql2c_char (& db_struct.res_directory_info_load [3], & rec->disk_name);
 	copyval_mysql2c_int (& db_struct.res_directory_info_load [4], & rec->parent_id);
-	copyval_mysql2c_int (& db_struct.res_directory_info_load [5], & rec->directory_size);
+	copyval_mysql2c_double (& db_struct.res_directory_info_load [5], & rec->directory_size);
 	copyval_mysql2c_time (& db_struct.res_directory_info_load [6], & rec->time);
 	copyval_mysql2c_time (& db_struct.res_directory_info_load [7], & rec->recent_use_time);
 	copyval_mysql2c_int (& db_struct.res_directory_info_load [8], & rec->permission);
@@ -947,8 +967,8 @@ int db_disk_info__save (db_disk_info *record)
 	copyval_c2mysql_char (& record->disk_name, & db_struct.par_disk_info_save [1]);
 	copyval_c2mysql_char (& record->disk_uuid, & db_struct.par_disk_info_save [2]);
 	copyval_c2mysql_char (& record->disk_type, & db_struct.par_disk_info_save [3]);
-	copyval_c2mysql_int (& record->disk_capacity, & db_struct.par_disk_info_save [4]);
-	copyval_c2mysql_int (& record->disk_used, & db_struct.par_disk_info_save [5]);
+	copyval_c2mysql_double (& record->disk_capacity, & db_struct.par_disk_info_save [4]);
+	copyval_c2mysql_double (& record->disk_used, & db_struct.par_disk_info_save [5]);
 	copyval_c2mysql_time (& record->recent_use_time, & db_struct.par_disk_info_save [6]);
 	copyval_c2mysql_int (& record->permisssion, & db_struct.par_disk_info_save [7]);
 	copyval_c2mysql_int (& record->disk_status, & db_struct.par_disk_info_save [8]);
@@ -971,8 +991,8 @@ int db_disk_info__delete (db_disk_info *record)
 	copyval_c2mysql_char (& record->disk_name, & db_struct.par_disk_info_delete [1]);
 	copyval_c2mysql_char (& record->disk_uuid, & db_struct.par_disk_info_delete [2]);
 	copyval_c2mysql_char (& record->disk_type, & db_struct.par_disk_info_delete [3]);
-	copyval_c2mysql_int (& record->disk_capacity, & db_struct.par_disk_info_delete [4]);
-	copyval_c2mysql_int (& record->disk_used, & db_struct.par_disk_info_delete [5]);
+	copyval_c2mysql_double (& record->disk_capacity, & db_struct.par_disk_info_delete [4]);
+	copyval_c2mysql_double (& record->disk_used, & db_struct.par_disk_info_delete [5]);
 	copyval_c2mysql_time (& record->recent_use_time, & db_struct.par_disk_info_delete [6]);
 	copyval_c2mysql_int (& record->permisssion, & db_struct.par_disk_info_delete [7]);
 	copyval_c2mysql_int (& record->disk_status, & db_struct.par_disk_info_delete [8]);
@@ -992,8 +1012,8 @@ int db_disk_info__update (db_disk_info *record)
 	copyval_c2mysql_char (& record->disk_name, & db_struct.par_disk_info_upd [1]);
 	copyval_c2mysql_char (& record->disk_uuid, & db_struct.par_disk_info_upd [2]);
 	copyval_c2mysql_char (& record->disk_type, & db_struct.par_disk_info_upd [3]);
-	copyval_c2mysql_int (& record->disk_capacity, & db_struct.par_disk_info_upd [4]);
-	copyval_c2mysql_int (& record->disk_used, & db_struct.par_disk_info_upd [5]);
+	copyval_c2mysql_double (& record->disk_capacity, & db_struct.par_disk_info_upd [4]);
+	copyval_c2mysql_double (& record->disk_used, & db_struct.par_disk_info_upd [5]);
 	copyval_c2mysql_time (& record->recent_use_time, & db_struct.par_disk_info_upd [6]);
 	copyval_c2mysql_int (& record->permisssion, & db_struct.par_disk_info_upd [7]);
 	copyval_c2mysql_int (& record->disk_status, & db_struct.par_disk_info_upd [8]);
@@ -1013,8 +1033,8 @@ int db_disk_info__insert (db_disk_info *record)
 	copyval_c2mysql_char (& record->disk_name, & db_struct.par_disk_info_ins [1]);
 	copyval_c2mysql_char (& record->disk_uuid, & db_struct.par_disk_info_ins [2]);
 	copyval_c2mysql_char (& record->disk_type, & db_struct.par_disk_info_ins [3]);
-	copyval_c2mysql_int (& record->disk_capacity, & db_struct.par_disk_info_ins [4]);
-	copyval_c2mysql_int (& record->disk_used, & db_struct.par_disk_info_ins [5]);
+	copyval_c2mysql_double (& record->disk_capacity, & db_struct.par_disk_info_ins [4]);
+	copyval_c2mysql_double (& record->disk_used, & db_struct.par_disk_info_ins [5]);
 	copyval_c2mysql_time (& record->recent_use_time, & db_struct.par_disk_info_ins [6]);
 	copyval_c2mysql_int (& record->permisssion, & db_struct.par_disk_info_ins [7]);
 	copyval_c2mysql_int (& record->disk_status, & db_struct.par_disk_info_ins [8]);
@@ -1049,8 +1069,8 @@ db_disk_info *db_disk_info__get_by_id (int disk_id)
 	copyval_mysql2c_char (& db_struct.res_disk_info_load [1], & rec->disk_name);
 	copyval_mysql2c_char (& db_struct.res_disk_info_load [2], & rec->disk_uuid);
 	copyval_mysql2c_char (& db_struct.res_disk_info_load [3], & rec->disk_type);
-	copyval_mysql2c_int (& db_struct.res_disk_info_load [4], & rec->disk_capacity);
-	copyval_mysql2c_int (& db_struct.res_disk_info_load [5], & rec->disk_used);
+	copyval_mysql2c_double (& db_struct.res_disk_info_load [4], & rec->disk_capacity);
+	copyval_mysql2c_double (& db_struct.res_disk_info_load [5], & rec->disk_used);
 	copyval_mysql2c_time (& db_struct.res_disk_info_load [6], & rec->recent_use_time);
 	copyval_mysql2c_int (& db_struct.res_disk_info_load [7], & rec->permisssion);
 	copyval_mysql2c_int (& db_struct.res_disk_info_load [8], & rec->disk_status);
@@ -1076,7 +1096,6 @@ void db_file_info__free (db_file_info *rec)
 	if (rec->directory_name != NULL) free (rec->directory_name);
 	if (rec->disk_name != NULL) free (rec->disk_name);
 	if (rec->md5 != NULL) free (rec->md5);
-	if (rec->location != NULL) free (rec->location);
 	free (rec);
 }
 
@@ -1090,14 +1109,15 @@ int db_file_info__save (db_file_info *record)
 	copyval_c2mysql_char (& record->directory_name, & db_struct.par_file_info_save [3]);
 	copyval_c2mysql_char (& record->disk_name, & db_struct.par_file_info_save [4]);
 	copyval_c2mysql_char (& record->md5, & db_struct.par_file_info_save [5]);
-	copyval_c2mysql_int (& record->file_size, & db_struct.par_file_info_save [6]);
-	copyval_c2mysql_char (& record->location, & db_struct.par_file_info_save [7]);
-	copyval_c2mysql_time (& record->time, & db_struct.par_file_info_save [8]);
-	copyval_c2mysql_time (& record->recent_use_time, & db_struct.par_file_info_save [9]);
-	copyval_c2mysql_int (& record->permission, & db_struct.par_file_info_save [10]);
-	copyval_c2mysql_int (& record->file_type, & db_struct.par_file_info_save [11]);
-	copyval_c2mysql_int (& record->accessed_time, & db_struct.par_file_info_save [12]);
-	copyval_c2mysql_int (& record->file_id, & db_struct.par_file_info_save [13]);
+	copyval_c2mysql_double (& record->file_size, & db_struct.par_file_info_save [6]);
+	copyval_c2mysql_double (& record->ra_val, & db_struct.par_file_info_save [7]);
+	copyval_c2mysql_double (& record->dec_val, & db_struct.par_file_info_save [8]);
+	copyval_c2mysql_time (& record->time, & db_struct.par_file_info_save [9]);
+	copyval_c2mysql_time (& record->recent_use_time, & db_struct.par_file_info_save [10]);
+	copyval_c2mysql_int (& record->permission, & db_struct.par_file_info_save [11]);
+	copyval_c2mysql_int (& record->file_type, & db_struct.par_file_info_save [12]);
+	copyval_c2mysql_int (& record->accessed_time, & db_struct.par_file_info_save [13]);
+	copyval_c2mysql_int (& record->file_id, & db_struct.par_file_info_save [14]);
 	ret = mysql_stmt_execute (db_struct.stmt_file_info_save);
 	if (ret) {
 		fprintf (stderr, __FILE__":%d: error (%s)\n", __LINE__, mysql_stmt_error (db_struct.stmt_file_info_save));
@@ -1118,14 +1138,15 @@ int db_file_info__delete (db_file_info *record)
 	copyval_c2mysql_char (& record->directory_name, & db_struct.par_file_info_delete [3]);
 	copyval_c2mysql_char (& record->disk_name, & db_struct.par_file_info_delete [4]);
 	copyval_c2mysql_char (& record->md5, & db_struct.par_file_info_delete [5]);
-	copyval_c2mysql_int (& record->file_size, & db_struct.par_file_info_delete [6]);
-	copyval_c2mysql_char (& record->location, & db_struct.par_file_info_delete [7]);
-	copyval_c2mysql_time (& record->time, & db_struct.par_file_info_delete [8]);
-	copyval_c2mysql_time (& record->recent_use_time, & db_struct.par_file_info_delete [9]);
-	copyval_c2mysql_int (& record->permission, & db_struct.par_file_info_delete [10]);
-	copyval_c2mysql_int (& record->file_type, & db_struct.par_file_info_delete [11]);
-	copyval_c2mysql_int (& record->accessed_time, & db_struct.par_file_info_delete [12]);
-	copyval_c2mysql_int (& record->file_id, & db_struct.par_file_info_delete [13]);
+	copyval_c2mysql_double (& record->file_size, & db_struct.par_file_info_delete [6]);
+	copyval_c2mysql_double (& record->ra_val, & db_struct.par_file_info_delete [7]);
+	copyval_c2mysql_double (& record->dec_val, & db_struct.par_file_info_delete [8]);
+	copyval_c2mysql_time (& record->time, & db_struct.par_file_info_delete [9]);
+	copyval_c2mysql_time (& record->recent_use_time, & db_struct.par_file_info_delete [10]);
+	copyval_c2mysql_int (& record->permission, & db_struct.par_file_info_delete [11]);
+	copyval_c2mysql_int (& record->file_type, & db_struct.par_file_info_delete [12]);
+	copyval_c2mysql_int (& record->accessed_time, & db_struct.par_file_info_delete [13]);
+	copyval_c2mysql_int (& record->file_id, & db_struct.par_file_info_delete [14]);
 	ret = mysql_stmt_execute (db_struct.stmt_file_info_delete);
 	if (ret) {
 		fprintf (stderr, __FILE__":%d: error (%s)\n", __LINE__, mysql_stmt_error (db_struct.stmt_file_info_delete));
@@ -1143,14 +1164,15 @@ int db_file_info__update (db_file_info *record)
 	copyval_c2mysql_char (& record->directory_name, & db_struct.par_file_info_upd [3]);
 	copyval_c2mysql_char (& record->disk_name, & db_struct.par_file_info_upd [4]);
 	copyval_c2mysql_char (& record->md5, & db_struct.par_file_info_upd [5]);
-	copyval_c2mysql_int (& record->file_size, & db_struct.par_file_info_upd [6]);
-	copyval_c2mysql_char (& record->location, & db_struct.par_file_info_upd [7]);
-	copyval_c2mysql_time (& record->time, & db_struct.par_file_info_upd [8]);
-	copyval_c2mysql_time (& record->recent_use_time, & db_struct.par_file_info_upd [9]);
-	copyval_c2mysql_int (& record->permission, & db_struct.par_file_info_upd [10]);
-	copyval_c2mysql_int (& record->file_type, & db_struct.par_file_info_upd [11]);
-	copyval_c2mysql_int (& record->accessed_time, & db_struct.par_file_info_upd [12]);
-	copyval_c2mysql_int (& record->file_id, & db_struct.par_file_info_upd [13]);
+	copyval_c2mysql_double (& record->file_size, & db_struct.par_file_info_upd [6]);
+	copyval_c2mysql_double (& record->ra_val, & db_struct.par_file_info_upd [7]);
+	copyval_c2mysql_double (& record->dec_val, & db_struct.par_file_info_upd [8]);
+	copyval_c2mysql_time (& record->time, & db_struct.par_file_info_upd [9]);
+	copyval_c2mysql_time (& record->recent_use_time, & db_struct.par_file_info_upd [10]);
+	copyval_c2mysql_int (& record->permission, & db_struct.par_file_info_upd [11]);
+	copyval_c2mysql_int (& record->file_type, & db_struct.par_file_info_upd [12]);
+	copyval_c2mysql_int (& record->accessed_time, & db_struct.par_file_info_upd [13]);
+	copyval_c2mysql_int (& record->file_id, & db_struct.par_file_info_upd [14]);
 	ret = mysql_stmt_execute (db_struct.stmt_file_info_upd);
 	if (ret) {
 		fprintf (stderr, __FILE__":%d: error (%s)\n", __LINE__, mysql_stmt_error (db_struct.stmt_file_info_upd));
@@ -1168,14 +1190,15 @@ int db_file_info__insert (db_file_info *record)
 	copyval_c2mysql_char (& record->directory_name, & db_struct.par_file_info_ins [3]);
 	copyval_c2mysql_char (& record->disk_name, & db_struct.par_file_info_ins [4]);
 	copyval_c2mysql_char (& record->md5, & db_struct.par_file_info_ins [5]);
-	copyval_c2mysql_int (& record->file_size, & db_struct.par_file_info_ins [6]);
-	copyval_c2mysql_char (& record->location, & db_struct.par_file_info_ins [7]);
-	copyval_c2mysql_time (& record->time, & db_struct.par_file_info_ins [8]);
-	copyval_c2mysql_time (& record->recent_use_time, & db_struct.par_file_info_ins [9]);
-	copyval_c2mysql_int (& record->permission, & db_struct.par_file_info_ins [10]);
-	copyval_c2mysql_int (& record->file_type, & db_struct.par_file_info_ins [11]);
-	copyval_c2mysql_int (& record->accessed_time, & db_struct.par_file_info_ins [12]);
-	copyval_c2mysql_int (& record->file_id, & db_struct.par_file_info_ins [13]);
+	copyval_c2mysql_double (& record->file_size, & db_struct.par_file_info_ins [6]);
+	copyval_c2mysql_double (& record->ra_val, & db_struct.par_file_info_ins [7]);
+	copyval_c2mysql_double (& record->dec_val, & db_struct.par_file_info_ins [8]);
+	copyval_c2mysql_time (& record->time, & db_struct.par_file_info_ins [9]);
+	copyval_c2mysql_time (& record->recent_use_time, & db_struct.par_file_info_ins [10]);
+	copyval_c2mysql_int (& record->permission, & db_struct.par_file_info_ins [11]);
+	copyval_c2mysql_int (& record->file_type, & db_struct.par_file_info_ins [12]);
+	copyval_c2mysql_int (& record->accessed_time, & db_struct.par_file_info_ins [13]);
+	copyval_c2mysql_int (& record->file_id, & db_struct.par_file_info_ins [14]);
 	ret = mysql_stmt_execute (db_struct.stmt_file_info_ins);
 	if (ret) {
 		fprintf (stderr, __FILE__":%d: error (%s)\n", __LINE__, mysql_stmt_error (db_struct.stmt_file_info_ins));
@@ -1208,13 +1231,14 @@ db_file_info *db_file_info__get_by_id (int file_id)
 	copyval_mysql2c_char (& db_struct.res_file_info_load [3], & rec->directory_name);
 	copyval_mysql2c_char (& db_struct.res_file_info_load [4], & rec->disk_name);
 	copyval_mysql2c_char (& db_struct.res_file_info_load [5], & rec->md5);
-	copyval_mysql2c_int (& db_struct.res_file_info_load [6], & rec->file_size);
-	copyval_mysql2c_char (& db_struct.res_file_info_load [7], & rec->location);
-	copyval_mysql2c_time (& db_struct.res_file_info_load [8], & rec->time);
-	copyval_mysql2c_time (& db_struct.res_file_info_load [9], & rec->recent_use_time);
-	copyval_mysql2c_int (& db_struct.res_file_info_load [10], & rec->permission);
-	copyval_mysql2c_int (& db_struct.res_file_info_load [11], & rec->file_type);
-	copyval_mysql2c_int (& db_struct.res_file_info_load [12], & rec->accessed_time);
+	copyval_mysql2c_double (& db_struct.res_file_info_load [6], & rec->file_size);
+	copyval_mysql2c_double (& db_struct.res_file_info_load [7], & rec->ra_val);
+	copyval_mysql2c_double (& db_struct.res_file_info_load [8], & rec->dec_val);
+	copyval_mysql2c_time (& db_struct.res_file_info_load [9], & rec->time);
+	copyval_mysql2c_time (& db_struct.res_file_info_load [10], & rec->recent_use_time);
+	copyval_mysql2c_int (& db_struct.res_file_info_load [11], & rec->permission);
+	copyval_mysql2c_int (& db_struct.res_file_info_load [12], & rec->file_type);
+	copyval_mysql2c_int (& db_struct.res_file_info_load [13], & rec->accessed_time);
 	ret = mysql_stmt_reset (db_struct.stmt_file_info_get_by_id);
 	if (ret) {
 		fprintf (stderr, __FILE__":%d: error (%s)\n", __LINE__, mysql_stmt_error (db_struct.stmt_file_info_get_by_id));

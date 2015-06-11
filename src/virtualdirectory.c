@@ -27,11 +27,13 @@ int format(char* input){
 	char* parameter1;
 	char* parameter2;
 	char* parameter3;
+	char* parameter4;
 
 	command=strtok(newInput," ");
 	parameter1=strtok(NULL," ");
 	parameter2=strtok(NULL," ");
 	parameter3=strtok(NULL," ");
+	parameter4=strtok(NULL," ");
 	//printf("%s\n",command);
 
 
@@ -78,10 +80,18 @@ int format(char* input){
 		startTime = parameter1;
 		endTime = parameter2;
 	}
+	else if(strcmp(command,"location")==0)
+	{
+		key=9;
+		start_ra = parameter1;
+		end_ra = parameter2;
+		start_dec = parameter3;
+		end_dec  = parameter4;
+	}
 
 	else
 	{
-		key=9;
+		key=10;
 	}
 	return key;
 
@@ -255,6 +265,21 @@ void query_time(char *start_time,  char *end_time){
 }
 
 
+/**
+ * query_location(char *start_ra, char *end_ra, char *start_dec, char *end_dec)
+ * 参数：起止位置坐标
+ * 返回值：无
+ * 功能描述：根据位置查询文件信息
+ */
+void
+query_location(char *start_ra, char *end_ra, char *start_dec, char *end_dec){
+
+	query_file_by_location(start_ra, end_ra, start_dec, end_dec);	//根据位置查询文件信息
+	print_result();		  //打印结果
+	free_result();        //释放结果集
+}
+
+
 void excute_return_parent_directory(char* dirName,char* diskName){
 
 	char* dirID;
@@ -292,6 +317,7 @@ void excute_help(){
 	printf("ls \t\t\t\t列出当前目录下的文件信息\n");
 	printf("pwd\t\t\t\t显示当前工作目录\n");
 	printf("query 开始日期 终止日期\t\t检索日期范围内的文件\n");
+	printf("location 起始赤经 终止赤经 起始赤纬 终止赤纬\t\t检索指定位置范围内的文件\n");
 
 }
 

@@ -102,6 +102,11 @@ int main()
 			}
 			case 9:
 			{
+				query_location(start_ra, end_ra, start_dec, end_dec);
+				break;
+			}
+			default :
+			{
 				excute_help();
 				break;
 			}
