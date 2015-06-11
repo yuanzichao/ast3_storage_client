@@ -75,18 +75,19 @@ CREATE TABLE `file_info` (
   `disk_name` varchar(255) NOT NULL,
   `md5` varchar(255) NOT NULL,
   `file_size` double NOT NULL,
-  `location` varchar(255) NOT NULL,
+  `ra_val` double NOT NULL,
+  `dec_val` double NOT NULL,
   `time` datetime NOT NULL,
   `recent_use_time` datetime NOT NULL,
   `permission` int(11) NOT NULL,
   `file_type` int(11) NOT NULL,
   `accessed_time` int(11) NOT NULL,
   PRIMARY KEY (`file_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+)  ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of file_info
 -- ----------------------------
-INSERT INTO `file_info` VALUES ('1', '20150424_0001.fits', '51bb74393f2646d7bd46b4427ade5e17', '20150424', 'disk_001', '7F97854DC04C119D461FED14F5D8BB96', '100', '100.00,100.00', '2015-04-24 14:31:17', '2015-04-24 14:31:24', '1', '1', '0');
-INSERT INTO `file_info` VALUES ('2', '20150424_0002.fits', '51bb74393f2646d7bd46b4427ade5e17', '20150424', 'disk_001', '7F97854DC04C119D461FED14F5D8BB96', '200', '111.00,111.00', '2015-04-24 14:33:37', '2015-04-24 14:33:40', '1', '1', '0');
-INSERT INTO `file_info` VALUES ('3', '20150423_0001.fits', 'c839baea5e8b4513bf5ae156085d5d2d', '20150423', 'disk_002', '7F97854DC04C119D461FED14F5D8BB96', '150', '120.00,120.00', '2015-04-24 14:35:53', '2015-04-24 14:35:56', '0', '0', '0');
+INSERT INTO `file_info` VALUES ('1', '20150424_0001.fits', '51bb74393f2646d7bd46b4427ade5e17', '20150424', 'disk_001', '7F97854DC04C119D461FED14F5D8BB96', '100', '100.00', '100.00', '2015-04-24 14:31:17', '2015-04-24 14:31:24', '1', '1', '0');
+INSERT INTO `file_info` VALUES ('2', '20150424_0002.fits', '51bb74393f2646d7bd46b4427ade5e17', '20150424', 'disk_001', '7F97854DC04C119D461FED14F5D8BB96', '200', '111.00', '111.00', '2015-04-24 14:33:37', '2015-04-24 14:33:40', '1', '1', '0');
+INSERT INTO `file_info` VALUES ('3', '20150423_0001.fits', 'c839baea5e8b4513bf5ae156085d5d2d', '20150423', 'disk_002', '7F97854DC04C119D461FED14F5D8BB96', '150', '120.00', '120.00', '2015-04-24 14:35:53', '2015-04-24 14:35:56', '0', '0', '0');
