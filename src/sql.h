@@ -15,21 +15,26 @@ int init_mysql();
 /************************* 磁盘操作函数声明区 *********************************/
 /***************************************************************************/
 int query_disks();						//查询所有硬盘信息
+int query_all_disks();						//查询所有硬盘详细信息
 char* get_disk_id(char *diskName);		//获取磁盘ID
 int query_disk(char *diskName);		//查询指定硬盘信息
 db_disk_info* get_disk_info(char *diskName);	//获取db_disk_info
 int insert_disk(db_disk_info *disk_info);		//插入磁盘信息
 void update_disk(db_disk_info *disk_info);		//更新磁盘信息
 int query_disks_info(char *diskName);			//查询硬盘内目录信息
+int query_disks_all_info(char *diskName);			//查询硬盘内目录详细信息
 
 /***************************************************************************/
 /************************* 目录操作函数声明区 *********************************/
 /***************************************************************************/
 char* get_directory_id(char *dirName, char *diskName);	//获取目录ID
+char* get_parent_id(char *dirName, char *diskName);      //获取父目录ID
 db_directory_info* get_directory_info(char *dirName, char *diskName);		//获取db_directory_info
 int insert_directory(db_directory_info *directory_info);	//插入目录信息
 void update_directory(db_directory_info *directory_info);	//更新目录信息
 int query_directory_info(char *dirName, char *diskName);	//查询目录内文件和目录信息
+int query_directory_all_info(char *dirName, char *diskName);	//查询目录内文件和目录详细信息
+void return_parent_directory(char *diskName,char *dirID);   //返回父目录
 
 /***************************************************************************/
 /************************* 文件操作函数声明区 *********************************/

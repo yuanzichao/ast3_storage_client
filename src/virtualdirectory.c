@@ -35,41 +35,53 @@ int format(char* input){
 	//printf("%s\n",command);
 
 
-	if((strcmp(command,"show")==0)&&(parameter1==NULL))
+	if((strcmp(command,"ls")==0)&&(parameter1==NULL))
 	{
 		key=0;
 	}
-	else if((strcmp(command,"use")==0)&&(parameter1!=NULL)&&(parameter2==NULL))
+	else if((strcmp(command,"ls")==0)&&(strcmp(parameter1,"-l")==0)&&(parameter2==NULL))
 	{
 		key=1;
-		currentDisk=parameter1;
 	}
-	else if((strcmp(command,"list")==0)&&(parameter1==NULL))
+	else if((strcmp(command,"cd")==0)&&(strcmp(parameter1,"/")==0)&&(parameter2==NULL))
 	{
 		key=2;
+		currentDisk=parameter1;
 	}
-	else if((strcmp(command,"ast3cd")==0)&&(parameter1!=NULL)&&(parameter2==NULL))
+	else if((strcmp(command,"cd")==0)&&(strcmp(parameter1,"..")==0)&&(parameter2==NULL))
 	{
 		key=3;
-		currentDirectory=parameter1;
+		//currentDirectory=parameter1;
 	}
-	else if((strcmp(command,"ast3ls")==0)&&(parameter1==NULL))
+	else if((strcmp(command,"cd")==0)&&(parameter1!=NULL)&&(strcmp(parameter1,"..")!=0)&&(strcmp(parameter1,"/")!=0)&&(parameter2==NULL))
 	{
 		key=4;
+		currentDirectory=parameter1;
 	}
-	else if((strcmp(command,"ast3pwd")==0)&&(parameter1==NULL))
+	else if((strcmp(command,"open")==0)&&(parameter1!=NULL)&&(parameter2==NULL))
 	{
 		key=5;
+		currentDisk=parameter1;
+	}
+	else if((strcmp(command,"ls")==0)&&(strcmp(parameter1,"-l")==0)&&(parameter2!=NULL)&&(parameter3==NULL))
+	{
+		key=6;
+		fileName = parameter2;
+	}
+	else if((strcmp(command,"pwd")==0)&&(parameter1==NULL))
+	{
+		key=7;
 	}
 	else if((strcmp(command,"query")==0)&&(parameter1!=NULL)&&(parameter2!=NULL)&&(parameter3==NULL))
 	{
-		key=6;
+		key=8;
 		startTime = parameter1;
 		endTime = parameter2;
 	}
+
 	else
 	{
-		key=7;
+		key=9;
 	}
 	return key;
 
@@ -88,10 +100,30 @@ void excute_show(){
 	query_disks();     //查询所有磁盘信息
 	print_result();    //打印结果
 	//printf("%d",print_result());
-	if((print_result())!=13)
+	/*if((print_result())!=13)
 	{
 		printf("%s\n","There is no disk information");
-	}
+	}*/
+	free_result();     //释放结果集
+
+}
+
+
+/*
+ * execute_show_all():执行show操作
+ * 参数：无
+ * 返回值：无
+ * 功能描述：列出所有磁盘详细信息
+ */
+void excute_show_all(){
+
+	query_all_disks();     //查询所有磁盘信息
+	print_result();    //打印结果
+	//printf("%d",print_result());
+	/*if((print_result())!=13)
+	{
+		printf("%s\n","There is no disk information");
+	}*/
 	free_result();     //释放结果集
 
 }
@@ -121,26 +153,33 @@ void excute_list(char* diskName){
 	query_disks_info(diskName);  //查询目录信息
 	print_result();              //打印结果
 	//printf("%d",print_result());
-	if((print_result())!=11)
+	/*if((print_result())!=11)
 	{
 		printf("%s\n","There are no directories in the disk");
-	}
+	}*/
 	free_result();               //释放结果集
 
 }
 
 
 /*
- * execute_cd(char* dirName):执行cd操作
- * 参数：char* dirName
+ * execute_list(char* diskName):执行list操作
+ * 参数：char* diskName
  * 返回值：无
- * 功能描述：切换当前工作目录
+ * 功能描述：列出指定磁盘下的目录信息
+ */
+void excute_list_all(char* diskName){
 
-void excute_cd(char* dirName){
+	query_disks_all_info(diskName);  //查询目录信息
+	print_result();              //打印结果
+	//printf("%d",print_result());
+	/*if((print_result())!=11)
+	{
+		printf("%s\n","There are no directories in the disk");
+	}*/
+	free_result();               //释放结果集
 
-	currentDirectory=dirName;
-
-}*/
+}
 
 
 /*
@@ -149,15 +188,35 @@ void excute_cd(char* dirName){
  * 返回值：无
  * 功能描述：在终端显示当前目录结构
  */
-void excute_ls(char* diskName, char* dirName){
+void excute_ls(char* dirName, char* diskName){
 
 	query_directory_info(dirName, diskName);//查询当前目录内文件和目录信息
 	print_result();       //打印结果
 	//printf("%d",print_result());
-	if((print_result())!=13)
+	/*if((print_result())!=13)
 	{
 		printf("%s\n","There are no files in the directory");
-	}
+	}*/
+	free_result();        //释放结果集
+
+}
+
+
+/*
+ * execute_ls(char* parameter):执行ls
+ * 参数：char* parameter
+ * 返回值：无
+ * 功能描述：在终端显示当前目录详细信息
+ */
+void excute_ls_all(char* dirName, char* diskName){
+
+	query_directory_all_info(dirName, diskName);//查询当前目录内文件和目录详细信息
+	print_result();       //打印结果
+	//printf("%d",print_result());
+	/*if((print_result())!=13)
+	{
+		printf("%s\n","There are no files in the directory");
+	}*/
 	free_result();        //释放结果集
 
 }
@@ -187,15 +246,34 @@ void query_time(char *start_time,  char *end_time){
 	query_file_by_time(start_time, end_time);//根据时间查询文件信息
 	print_result();		  //打印结果
 	//printf("%d",print_result());
-	if((print_result())!=13)
+	/*if((print_result())!=13)
 	{
 		printf("%s\n","No file was retrieved");
-	}
+	}*/
 	free_result();        //释放结果集
 
 }
 
 
+void excute_return_parent_directory(char* dirName,char* diskName){
+
+	char* dirID;
+	memset(dirID, 0, sizeof(char)*100);
+	memcpy(dirID,get_parent_id(dirName,diskName),strlen(get_parent_id(dirName,diskName)));
+	memset(currentDirectory, 0, sizeof(char)*100);
+	memcpy(currentDirectory,return_directory(dirID,diskName),strlen(return_directory(dirID,diskName)));
+	//char* dirID=get_parent_id(dirName,diskName);
+	//currentDirectory=return_directory(dirID,diskName);
+	print_result();
+	free_result();
+
+}
+
+
+void excute_ls_file(char* fileName,char* dirName,char* diskName){
+
+	get_file_info(fileName,dirName, diskName);
+}
 
 /*
  * execute_help():执行query操作
@@ -205,12 +283,14 @@ void query_time(char *start_time,  char *end_time){
  */
 void excute_help(){
 	printf("本软件为虚拟目录，您可通过以下指令进行操作\n");
-	printf("show\t\t\t\t列出所有磁盘信息\n");
-	printf("use 磁盘名\t\t\t进入指定磁盘\n");
-	printf("list\t\t\t\t列出所在磁盘下的目录信息\n");
-	printf("ast3cd 目录名\t\t\t切换到指定目录\n");
-	printf("ast3ls \t\t\t\t列出当前目录下的文件信息\n");
-	printf("ast3pwd\t\t\t\t显示当前工作目录\n");
+	printf("ls\t\t\t\t列出所有磁盘及目录信息\n");
+	printf("ls -l\t\t\t\t列出磁盘及目录详细信息\n");
+	printf("open 磁盘名\t\t\t进入指定磁盘\n");
+	printf("cd 目录名\t\t\t\t切换到指定目录\n");
+	printf("cd ..\t\t\t\t返回父目录\n");
+	printf("cd /\t\t\t\t返回根目录\n");
+	printf("ls \t\t\t\t列出当前目录下的文件信息\n");
+	printf("pwd\t\t\t\t显示当前工作目录\n");
 	printf("query 开始日期 终止日期\t\t检索日期范围内的文件\n");
 
 }

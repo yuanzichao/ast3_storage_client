@@ -49,6 +49,26 @@ query_disks(){
 
     char sql[MAX_BUF_SIZE];
     memset(sql, 0, sizeof(sql));
+    sprintf(sql, "SELECT disk_name FROM `disk_info`");
+
+    if (mysql_query(g_conn, sql)){
+    	 print_mysql_error(NULL);
+    }
+
+    g_res = mysql_store_result(g_conn); // 从服务器传送结果集至本地，mysql_use_result直接使用服务器上的记录集
+
+    return EXIT_SUCCESS;
+}
+
+
+/**
+ * 查询所有硬盘详细信息
+ */
+int
+query_all_disks(){
+
+    char sql[MAX_BUF_SIZE];
+    memset(sql, 0, sizeof(sql));
     sprintf(sql, "SELECT * FROM `disk_info`");
 
     if (mysql_query(g_conn, sql)){
@@ -181,6 +201,26 @@ query_disks_info(char *diskName){
 
 	char sql[MAX_BUF_SIZE];
 	memset(sql, 0, sizeof(sql));
+	sprintf(sql, "SELECT directory_name FROM `directory_info` Where disk_name = '%s' AND parent_id = 0", diskName);
+
+	if (mysql_query(g_conn, sql)){
+		 print_mysql_error(NULL);
+	}
+
+	g_res = mysql_store_result(g_conn); // 从服务器传送结果集至本地，mysql_use_result直接使用服务器上的记录集
+
+	return EXIT_SUCCESS;
+}
+
+
+/**
+ * 查询硬盘内目录信息
+ */
+int
+query_disks_all_info(char *diskName){
+
+	char sql[MAX_BUF_SIZE];
+	memset(sql, 0, sizeof(sql));
 	sprintf(sql, "SELECT * FROM `directory_info` Where disk_name = '%s' AND parent_id = 0", diskName);
 
 	if (mysql_query(g_conn, sql)){
@@ -192,6 +232,55 @@ query_disks_info(char *diskName){
 	return EXIT_SUCCESS;
 }
 
+
+/**
+ * 返回指定ID的目录
+ */
+char*
+return_directory(char *dirID, char *diskName){
+
+	char sql[MAX_BUF_SIZE];
+	memset(sql, 0, sizeof(sql));
+	sprintf(sql, "SELECT directory_name FROM `directory_info` Where directory_id = '%s' AND disk_name = '%s'", dirID, diskName);
+
+	if (mysql_query(g_conn, sql)){
+		 print_mysql_error(NULL);
+	}
+
+	g_res = mysql_store_result(g_conn); // 从服务器传送结果集至本地，mysql_use_result直接使用服务器上的记录集
+
+	char *directory = (char *) malloc(MAX_BUF_SIZE);
+	int i;
+	g_row = mysql_fetch_row(g_res);
+	sprintf(directory,"%s", g_row[i]);
+
+	return directory;
+}
+
+
+/**
+ * 获取父目录ID
+ */
+char*
+get_parent_id(char *dirName, char *diskName){
+
+	char sql[MAX_BUF_SIZE];
+	memset(sql, 0, sizeof(sql));
+	sprintf(sql, "SELECT parent_id FROM `directory_info` Where directory_name = '%s' AND disk_name = '%s'", dirName, diskName);
+
+	if (mysql_query(g_conn, sql)){
+		 print_mysql_error(NULL);
+	}
+
+	g_res = mysql_store_result(g_conn); // 从服务器传送结果集至本地，mysql_use_result直接使用服务器上的记录集
+
+	char *dirId = (char *) malloc(MAX_BUF_SIZE);
+	int i;
+	g_row = mysql_fetch_row(g_res);
+	sprintf(dirId,"%s", g_row[i]);
+
+	return dirId;
+}
 
 /**
  * 获取目录ID
@@ -292,6 +381,26 @@ update_directory(db_directory_info *directory_info){
  */
 int
 query_directory_info(char *dirName, char *diskName){
+
+	char sql[MAX_BUF_SIZE];
+	memset(sql, 0, sizeof(sql));
+	sprintf(sql, "SELECT file_name FROM `file_info` Where directory_name = '%s' AND disk_name = '%s'", dirName, diskName);
+
+	if (mysql_query(g_conn, sql)){
+		 print_mysql_error(NULL);
+	}
+
+	g_res = mysql_store_result(g_conn); // 从服务器传送结果集至本地，mysql_use_result直接使用服务器上的记录集
+
+	return EXIT_SUCCESS;
+}
+
+
+/**
+ * 查询目录内文件和目录详细信息
+ */
+int
+query_directory_all_info(char *dirName, char *diskName){
 
 	char sql[MAX_BUF_SIZE];
 	memset(sql, 0, sizeof(sql));
