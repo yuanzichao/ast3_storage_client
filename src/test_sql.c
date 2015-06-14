@@ -87,22 +87,60 @@ int main()
 			}
 			case 6:
 			{
-				excute_ls_file(fileName,curr_dir,curr_disk);
+				excute_ls_file_all(fileName,curr_dir,curr_disk);
 				break;
 			}
 			case 7:
 			{
-				printf("%s",curr_dir);
+				if(strcmp(curr_dir,"unknown")==0)
+					printf("%s\n",curr_disk);
+				else
+				    printf("%s\n",curr_dir);
 				break;
 			}
 			case 8:
 			{
-				query_time(startTime, endTime);
+				query_time_from_curr(curr_dir,curr_disk,startTime, endTime);
 				break;
 			}
 			case 9:
 			{
 				query_location(start_ra, end_ra, start_dec, end_dec);
+				break;
+			}
+			case 10:
+			{
+				if(strcmp(curr_disk,"home")==0)
+					excute_show_primary();
+				else if(strcmp(curr_dir,"unknown")==0)
+					excute_list_primary(curr_disk);
+				else
+					excute_ls_primary(curr_dir,curr_disk);
+				break;
+			}
+			case 11:
+			{
+				excute_ls_file_primary(fileName,curr_dir,curr_disk);
+				break;
+			}
+			case 12:
+			{
+				excute_ls_file_wildcard(fileName,curr_dir,curr_disk);
+				break;
+			}
+			case 13:
+			{
+				query_time_from_home(startTime, endTime);
+				break;
+			}
+			case 14:
+			{
+				query_location_curr(curr_dir,curr_disk,start_ra, end_ra, start_dec, end_dec);
+				break;
+			}
+			case 15:
+			{
+				excute_copy_file();
 				break;
 			}
 			default :

@@ -42,7 +42,7 @@ init_mysql() {
 
 
 /**
- * 查询所有硬盘信息
+ * 查询所有硬盘信息--硬盘名
  */
 int
 query_disks(){
@@ -50,6 +50,26 @@ query_disks(){
     char sql[MAX_BUF_SIZE];
     memset(sql, 0, sizeof(sql));
     sprintf(sql, "SELECT disk_name FROM `disk_info`");
+
+    if (mysql_query(g_conn, sql)){
+    	 print_mysql_error(NULL);
+    }
+
+    g_res = mysql_store_result(g_conn); // 从服务器传送结果集至本地，mysql_use_result直接使用服务器上的记录集
+
+    return EXIT_SUCCESS;
+}
+
+
+/**
+ * 查询所有硬盘基本信息--id,name,容量，权限，状态
+ */
+int
+query_primary_disks(){
+
+    char sql[MAX_BUF_SIZE];
+    memset(sql, 0, sizeof(sql));
+    sprintf(sql, "SELECT disk_id,disk_name,permisssion,disk_capacity,disk_status FROM `disk_info`");
 
     if (mysql_query(g_conn, sql)){
     	 print_mysql_error(NULL);
@@ -202,6 +222,26 @@ query_disks_info(char *diskName){
 	char sql[MAX_BUF_SIZE];
 	memset(sql, 0, sizeof(sql));
 	sprintf(sql, "SELECT directory_name FROM `directory_info` Where disk_name = '%s' AND parent_id = 0", diskName);
+
+	if (mysql_query(g_conn, sql)){
+		 print_mysql_error(NULL);
+	}
+
+	g_res = mysql_store_result(g_conn); // 从服务器传送结果集至本地，mysql_use_result直接使用服务器上的记录集
+
+	return EXIT_SUCCESS;
+}
+
+
+/**
+ * 查询硬盘内目录基本信息--目录id，目录名，目录权限，目录大小，创建时间
+ */
+int
+query_disks_primary_info(char *diskName){
+
+	char sql[MAX_BUF_SIZE];
+	memset(sql, 0, sizeof(sql));
+	sprintf(sql, "SELECT directory_id,directory_name,directory_size,time,permission FROM `directory_info` Where disk_name = '%s' AND parent_id = 0", diskName);
 
 	if (mysql_query(g_conn, sql)){
 		 print_mysql_error(NULL);
@@ -400,6 +440,26 @@ query_directory_info(char *dirName, char *diskName){
  * 查询目录内文件和目录详细信息
  */
 int
+query_directory_primary_info(char *dirName, char *diskName){
+
+	char sql[MAX_BUF_SIZE];
+	memset(sql, 0, sizeof(sql));
+	sprintf(sql, "SELECT file_id,file_name,file_size,time,permission FROM `file_info` Where directory_name = '%s' AND disk_name = '%s'", dirName, diskName);
+
+	if (mysql_query(g_conn, sql)){
+		 print_mysql_error(NULL);
+	}
+
+	g_res = mysql_store_result(g_conn); // 从服务器传送结果集至本地，mysql_use_result直接使用服务器上的记录集
+
+	return EXIT_SUCCESS;
+}
+
+
+/**
+ * 查询目录内文件和目录详细信息
+ */
+int
 query_directory_all_info(char *dirName, char *diskName){
 
 	char sql[MAX_BUF_SIZE];
@@ -416,6 +476,22 @@ query_directory_all_info(char *dirName, char *diskName){
 }
 
 
+int
+query_directory_wildcard_info(char* fileName,char* dirName,char* diskName){
+
+	char sql[MAX_BUF_SIZE];
+	memset(sql, 0, sizeof(sql));
+	sprintf(sql, "SELECT * FROM `file_info` Where file_name LIKE '%%s' AND directory_name = '%s' AND disk_name = '%s'", fileName,dirName, diskName);
+
+	if (mysql_query(g_conn, sql)){
+		 print_mysql_error(NULL);
+	}
+
+	g_res = mysql_store_result(g_conn); // 从服务器传送结果集至本地，mysql_use_result直接使用服务器上的记录集
+
+	return EXIT_SUCCESS;
+
+}
 /**
  * 获取文件ID
  */
@@ -445,31 +521,44 @@ get_file_id(char *fileName, char *dirName, char *diskName){
 
 
 /**
- **根据日期检索文件
-
-char*
-query_file_id(char *dirName, char *diskName，datetime time1,datetime time2){
+ * 获取指定文件基本信息
+ */
+int
+get_file_primary_info(char *fileName, char *dirName, char *diskName){
 
 	char sql[MAX_BUF_SIZE];
 	memset(sql, 0, sizeof(sql));
-	sprintf(sql, "SELECT file_id FROM `file_info` Where directory_name = '%s' AND disk_name = '%s' AND time >= '%s' AND time <= '%s'", dirName, diskName,time1,time2);
+	sprintf(sql, "SELECT file_id,file_name,file_size,time,permission FROM `file_info` Where directory_name = '%s' AND disk_name = '%s' AND file_name = '%s'", dirName, diskName,fileName);
 
 	if (mysql_query(g_conn, sql)){
-		 print_mysql_error(NULL);
+			print_mysql_error(NULL);
 	}
 
 	g_res = mysql_store_result(g_conn); // 从服务器传送结果集至本地，mysql_use_result直接使用服务器上的记录集
 
-	char *file_id = (char *) malloc(MAX_BUF_SIZE);
-	int i;
-	while ((g_row = mysql_fetch_row(g_res))) {
-		for(i=0; i<get_fields(); i++){
-			sprintf(file_id, "%s", g_row[i]);   //获取目录ID
-		}
+	return EXIT_SUCCESS;
+}
+
+
+/**
+ * 获取指定文件详细信息
+ */
+int
+get_file_all_info(char *fileName, char *dirName, char *diskName){
+
+	char sql[MAX_BUF_SIZE];
+	memset(sql, 0, sizeof(sql));
+	sprintf(sql, "SELECT * FROM `file_info` Where directory_name = '%s' AND disk_name = '%s' AND file_name = '%s'", dirName, diskName,fileName);
+
+	if (mysql_query(g_conn, sql)){
+			print_mysql_error(NULL);
 	}
 
-	return file_id;
-}*/
+	g_res = mysql_store_result(g_conn); // 从服务器传送结果集至本地，mysql_use_result直接使用服务器上的记录集
+
+	return EXIT_SUCCESS;
+}
+
 
 /**
  * 获取db_file_info
@@ -575,6 +664,26 @@ query_file_by_time(char *start_time, char * end_time){
 
 
 /**
+ * 根据时间查询文件信息
+ */
+int
+query_file_by_time_curr(char *dirName, char *diskName,char *start_time, char * end_time){
+
+	char sql[MAX_BUF_SIZE];
+	memset(sql, 0, sizeof(sql));
+	sprintf(sql, "SELECT * FROM `file_info` Where time >= '%s' AND time <= '%s'AND directory_name = '%s' AND disk_name = '%s'", start_time, end_time,dirName,diskName);
+
+	if (mysql_query(g_conn, sql)){
+		 print_mysql_error(NULL);
+	}
+
+	g_res = mysql_store_result(g_conn); // 从服务器传送结果集至本地，mysql_use_result直接使用服务器上的记录集
+
+	return EXIT_SUCCESS;
+}
+
+
+/**
  * 根据位置查询文件信息
  */
 int
@@ -595,6 +704,25 @@ query_file_by_location(char *start_ra, char *end_ra, char *start_dec, char *end_
 }
 
 
+/**
+ * 根据位置查询文件信息
+ */
+int
+query_file_by_curr_location(char* dirName,char* diskName,char *start_ra, char *end_ra, char *start_dec, char *end_dec){
+
+	char sql[MAX_BUF_SIZE];
+	memset(sql, 0, sizeof(sql));
+	sprintf(sql, "SELECT * FROM `file_info` Where ra_val >= '%s' AND ra_val <= '%s' AND dec_val >= '%s' AND dec_val <= '%s' AND directory_name = '%s' AND disk_name = '%s'",
+			start_ra, end_ra, start_dec, end_dec,dirName,diskName);
+
+	if (mysql_query(g_conn, sql)){
+		 print_mysql_error(NULL);
+	}
+
+	g_res = mysql_store_result(g_conn); // 从服务器传送结果集至本地，mysql_use_result直接使用服务器上的记录集
+
+	return EXIT_SUCCESS;
+}
 
 
 /**
