@@ -4,7 +4,7 @@
 #include <time.h>
 
 #include "sql.h"
-#include "utils/read_conf.h"
+#include "../utils/read_conf.h"
 
 //数据库连接信息
 char g_host_name[MAX_BUF_SIZE];

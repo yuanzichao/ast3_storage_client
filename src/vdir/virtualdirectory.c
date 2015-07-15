@@ -9,7 +9,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include"sql.h"
+#include"../sql/sql.h"
 #include"virtualdirectory.h"
 
 /*

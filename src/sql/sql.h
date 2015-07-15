@@ -1,5 +1,5 @@
 #include <mysql/mysql.h>
-#include "orm/db.h"
+#include "../orm/db.h"
 
 #define MAX_BUF_SIZE 1024 // 缓冲区最大字节数
 

@@ -3,8 +3,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include"virtualdirectory.h"
-#include"sql.h"
+#include "vdir/virtualdirectory.h"
+#include "sql/sql.h"
 
 //主函数
 int main()

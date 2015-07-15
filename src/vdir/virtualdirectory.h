@@ -6,7 +6,7 @@
  */
 
 #include <mysql/mysql.h>
-#include "orm/db.h"
+#include "../orm/db.h"
 
 #ifndef SRC_VIRTUALDIRECTORY_H_
 #define SRC_VIRTUALDIRECTORY_H_
