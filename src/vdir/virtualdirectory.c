@@ -9,8 +9,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include"../sql/sql.h"
-#include"virtualdirectory.h"
+#include "../sql/sql.h"
+#include "../welcome/welcome.h"
+#include "virtualdirectory.h"
 
 /*
  * format()：命令预处理
@@ -463,23 +464,8 @@ void excute_copy_file(){
  * 功能描述：显示帮助信息
  */
 void excute_help(){
-	printf("本软件为虚拟目录，您可通过以下指令进行操作\n");
-	printf("ls\t\t\t\t\t\t列出所有磁盘名、目录名和文件名\n");
-	printf("ls -l\t\t\t\t\t\t列出所有磁盘、目录及文件的基本信息\n");
-	printf("ls -l 文件名\t\t\t\t\t列出指定文件的基本信息\n");
-	printf("ls -***\t\t\t\t\t\t列出所有磁盘、目录及文件的详细信息\n");
-	printf("ls -*** 文件名\t\t\t\t\t列出指定文件的详细信息\n");
-	printf("open 磁盘名\t\t\t\t\t进入指定磁盘\n");
-	printf("cd 目录名\t\t\t\t\t\t切换到指定目录\n");
-	printf("cd ..\t\t\t\t\t\t返回父目录\n");
-	printf("cd /\t\t\t\t\t\t返回根目录\n");
-	printf("pwd\t\t\t\t\t\t显示当前工作目录\n");
-	printf("find time 开始日期 终止日期\t\t\t在当前目录下检索日期范围内的文件\n");
-	printf("find /time 开始日期 终止日期\t\t\t从根目录开始检索日期范围内的文件\n");
-	printf("location 起始赤经 终止赤经 起始赤纬 终止赤纬\t\t在当前目录下检索指定位置范围内的文件\n");
-	printf("/location 起始赤经 终止赤经 起始赤纬 终止赤纬\t\t从根目录开始检索指定位置范围内的文件\n");
-	printf("cp 文件名\t\t\t\t\t\t复制指定目录下的文件到特定路径下\n");
-	printf("cp 目录名\t\t\t\t\t\t复制指定文件到特定路径下\n");
+
+	help_menu();
 
 }
 

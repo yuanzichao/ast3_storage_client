@@ -5,31 +5,46 @@
 
 #include "vdir/virtualdirectory.h"
 #include "sql/sql.h"
+#include "welcome/welcome.h"
 
 //主函数
 int main()
 {
 
-	init_mysql();//初始化数据库
+	init_mysql();		//初始化数据库
+
 
 	//声明命令
-	char input[100];
-	char curr_disk[100];
-	char curr_dir[100];
-    printf("您可通过help获取帮助\n");
-    printf(">>>>");
+	char input[MAX_BUF_SIZE];
+	char curr_disk[MAX_BUF_SIZE];
+	char curr_dir[MAX_BUF_SIZE];
 
-    memset(curr_disk, 0, sizeof(char)*100);
-    memcpy(curr_disk, "home", sizeof(char)*4);
-    memset(curr_dir, 0, sizeof(char)*100);
-    memcpy(curr_dir, "unknown", sizeof(char)*7);
 
+	//欢迎界面
+	welcome();
+
+	//功能列表
+	main_menu();
+
+
+	//初始化磁盘和目录
+    memset(curr_disk, 0, sizeof(curr_disk));
+    memcpy(curr_disk, "home", sizeof(curr_disk));
+    memset(curr_dir, 0, sizeof(curr_dir));
+    memcpy(curr_dir, "unknown", sizeof(curr_dir));
+
+    //输出当前根目录
+    printf("%s/", curr_disk);
+
+
+    //执行目录功能操作
 	while(1){
 
-        memset(input, 0,sizeof(char)*100);
+        memset(input, 0,sizeof(input));
+
 		fgets(input,100,stdin);   //获取用户输入指令，以回车结束
 
-		key=format(&input);//命令解析：主要对input进行格式化处理
+		key = format(&input);//命令解析：主要对input进行格式化处理
 
 		//执行响应的动作，key为命令解析后结果，决定调用哪个函数
 		switch (key) {
@@ -56,10 +71,10 @@ int main()
 			}
 			case 2://返回根目录
 			{
-				memset(curr_disk, 0, sizeof(char)*100);
-				memcpy(curr_disk, "home", sizeof(char)*4);
-			    memset(curr_dir, 0, sizeof(char)*100);
-			    memcpy(curr_dir, "unknown", sizeof(char)*7);
+				memset(curr_disk, 0, sizeof(curr_disk));
+				memcpy(curr_disk, "home", sizeof(curr_disk));
+			    memset(curr_dir, 0, sizeof(curr_dir));
+			    memcpy(curr_dir, "unknown", sizeof(curr_dir));
 				break;
 			}
 			case 3://返回父目录
@@ -67,22 +82,22 @@ int main()
 				/*excute_return_parent_directory(curr_disk,curr_dir);
 				memset(curr_dir, 0, sizeof(char)*100);
 				memcpy(curr_dir, currentDirectory, strlen(currentDirectory));*/
-				memset(curr_disk, 0, sizeof(char)*100);
-				memcpy(curr_disk, "home", sizeof(char)*4);
-				memset(curr_dir, 0, sizeof(char)*100);
-				memcpy(curr_dir, "unknown", sizeof(char)*7);
+				memset(curr_disk, 0, sizeof(curr_disk));
+				memcpy(curr_disk, "home", sizeof(curr_disk));
+				memset(curr_dir, 0, sizeof(curr_dir));
+				memcpy(curr_dir, "unknown", sizeof(curr_dir));
 				break;
 			}
 			case 4://打开指定硬盘
 			{
-				memset(curr_dir, 0, sizeof(char)*100);
-				memcpy(curr_dir, currentDirectory, strlen(currentDirectory));
+				memset(curr_dir, 0, sizeof(curr_disk));
+				memcpy(curr_dir, currentDirectory, sizeof(curr_disk));
 				break;
 			}
 			case 5://切换到指定目录
 			{
-				memset(curr_disk, 0, sizeof(char)*100);
-				memcpy(curr_disk, currentDisk, strlen(currentDisk));
+				memset(curr_disk, 0, sizeof(curr_disk));
+				memcpy(curr_disk, curr_disk, sizeof(curr_disk));
 				break;
 			}
 			case 6:
@@ -151,18 +166,16 @@ int main()
 
 		}//指令执行结束，重新循环
 
-		//printf("\n");
-        printf("%s",curr_disk);
-	    printf("%s","/");
+
+		//打印当前目录
+		printf("%s/",curr_disk);
+
 		if(strcmp(curr_dir,"unknown")!=0)
 		{
 			printf("%s",curr_dir);
 			printf("%s","/");
 		}
-
-
 	}
-
 
 }
 
