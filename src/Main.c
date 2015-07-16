@@ -6,6 +6,7 @@
 #include "vdir/virtualdirectory.h"
 #include "sql/sql.h"
 #include "welcome/welcome.h"
+#include "history/history.h"
 
 //主函数
 int main()
@@ -42,7 +43,9 @@ int main()
 
         memset(input, 0,sizeof(input));
 
-		fgets(input,100,stdin);   //获取用户输入指令，以回车结束
+		fgets(input, MAX_BUF_SIZE, stdin);   //获取用户输入指令，以回车结束
+
+		insert_history(strtok(input,"\n"));				//操作日志记录
 
 		key = format(&input);//命令解析：主要对input进行格式化处理
 
@@ -158,9 +161,32 @@ int main()
 				excute_copy_file();
 				break;
 			}
+			case 16:
+			{
+				get_cur_history();			//查询当天所有操作记录
+				break;
+			}
+			case 17:
+			{
+				get_all_history();			//查询当天所有操作记录
+				break;
+			}
+			case 18:
+			{
+				get_spe_history(spe_date);			//查询当天所有操作记录
+				break;
+			}
+
+
+			case 100:
+			{
+				excute_help();;						//帮助菜单
+				break;
+			}
+
 			default :
 			{
-				excute_help();
+				excute_error();
 				break;
 			}
 

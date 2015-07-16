@@ -24,10 +24,13 @@ char* fileName;
 char* startTime;
 char* endTime;
 
-char *start_ra;
-char *end_ra;
-char *start_dec;
-char *end_dec;
+char* start_ra;
+char* end_ra;
+char* start_dec;
+char* end_dec;
+
+char* spe_date;
+
 
 MYSQL_ROW g_row1; // 字符串数组，mysql 记录行
 
@@ -59,3 +62,4 @@ void query_location(char *start_ra, char *end_ra, char *start_dec, char *end_dec
 void excute_return_parent_directory(char* dirName,char* diskName);
 void excute_copy_file();
 void excute_help();
+void excute_error();					//错误信息处理

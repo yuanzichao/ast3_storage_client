@@ -38,93 +38,68 @@ int format(char* input){
 	//printf("%s\n",command);
 
 
-	if((strcmp(command,"ls")==0)&&(parameter1==NULL))
-	{
+	if((strcmp(command,"ls")==0)&&(parameter1==NULL)) {
 		key=0;
-	}
-	else if((strcmp(command,"ls")==0)&&(strcmp(parameter1,"-l")==0)&&(parameter2==NULL))
-	{
+	} else if((strcmp(command,"ls")==0)&&(strcmp(parameter1,"-l")==0)&&(parameter2==NULL)) {
 		key=10;
-	}
-	else if((strcmp(command,"ls")==0)&&(strcmp(parameter1,"-l")==0)&&(parameter2!=NULL)&&(strcmp(parameter2,"*.fits")!=0)&&(parameter3==NULL))
-	{
+	} else if((strcmp(command,"ls")==0)&&(strcmp(parameter1,"-l")==0)&&(parameter2!=NULL)&&(strcmp(parameter2,"*.fits")!=0)&&(parameter3==NULL)) {
 		key=11;
 		fileName=parameter2;
-	}
-	else if((strcmp(command,"ls")==0)&&(strcmp(parameter1,"-***")==0)&&(parameter2==NULL))
-	{
+	} else if((strcmp(command,"ls")==0)&&(strcmp(parameter1,"-***")==0)&&(parameter2==NULL)) {
 		key=1;
-	}
-
-	else if((strcmp(command,"cd")==0)&&(strcmp(parameter1,"/")==0)&&(parameter2==NULL))
-	{
+	} else if((strcmp(command,"cd")==0)&&(strcmp(parameter1,"/")==0)&&(parameter2==NULL)) {
 		key=2;
 		currentDisk=parameter1;
-	}
-	else if((strcmp(command,"cd")==0)&&(strcmp(parameter1,"..")==0)&&(parameter2==NULL))
-	{
+	} else if((strcmp(command,"cd")==0)&&(strcmp(parameter1,"..")==0)&&(parameter2==NULL)) {
 		key=3;
 		//currentDirectory=parameter1;
-	}
-	else if((strcmp(command,"cd")==0)&&(parameter1!=NULL)&&(strcmp(parameter1,"..")!=0)&&(strcmp(parameter1,"/")!=0)&&(parameter2==NULL))
-	{
+	} else if((strcmp(command,"cd")==0)&&(parameter1!=NULL)&&(strcmp(parameter1,"..")!=0)&&(strcmp(parameter1,"/")!=0)&&(parameter2==NULL)) {
 		key=4;
 		currentDirectory=parameter1;
-	}
-	else if((strcmp(command,"open")==0)&&(parameter1!=NULL)&&(parameter2==NULL))
-	{
+	} else if((strcmp(command,"open")==0)&&(parameter1!=NULL)&&(parameter2==NULL)) {
 		key=5;
 		currentDisk=parameter1;
-	}
-	else if((strcmp(command,"ls")==0)&&(strcmp(parameter1,"-***")==0)&&(parameter2!=NULL)&&(parameter3==NULL))
-	{
+	} else if((strcmp(command,"ls")==0)&&(strcmp(parameter1,"-***")==0)&&(parameter2!=NULL)&&(parameter3==NULL)) {
 		key=6;
 		fileName = parameter2;
-	}
-	else if((strcmp(command,"pwd")==0)&&(parameter1==NULL))
-	{
+	} else if((strcmp(command,"pwd")==0)&&(parameter1==NULL)) {
 		key=7;
-	}
-	else if((strcmp(command,"find")==0)&&(strcmp(parameter1,"time")==0)&&(parameter2!=NULL)&&(parameter3!=NULL)&&(parameter4==NULL))
-	{
+	} else if((strcmp(command,"find")==0)&&(strcmp(parameter1,"time")==0)&&(parameter2!=NULL)&&(parameter3!=NULL)&&(parameter4==NULL)) {
 		key=8;
 		startTime = parameter2;
 		endTime = parameter3;
-	}
-	else if((strcmp(command,"find")==0)&&(strcmp(parameter1,"/time")==0)&&(parameter2!=NULL)&&(parameter3!=NULL)&&(parameter4==NULL))
-	{
+	} else if((strcmp(command,"find")==0)&&(strcmp(parameter1,"/time")==0)&&(parameter2!=NULL)&&(parameter3!=NULL)&&(parameter4==NULL)) {
 		key=13;
 		startTime = parameter2;
 		endTime = parameter3;
-	}
-	else if(strcmp(command,"/location")==0)
-	{
+	} else if(strcmp(command,"/location")==0) {
 		key=9;
 		start_ra = parameter1;
 		end_ra = parameter2;
 		start_dec = parameter3;
 		end_dec  = parameter4;
-	}
-	else if(strcmp(command,"location")==0)
-	{
+	} else if(strcmp(command,"location")==0) {
 		key=14;
 		start_ra = parameter1;
 		end_ra = parameter2;
 		start_dec = parameter3;
 		end_dec  = parameter4;
-	}
-	else if((strcmp(command,"ls")==0)&&(strcmp(parameter1,"-l")==0)&&(strcmp(parameter2,"*.fits")==0)&&(parameter3==NULL))
-	{
+	} else if((strcmp(command,"ls")==0)&&(strcmp(parameter1,"-l")==0)&&(strcmp(parameter2,"*.fits")==0)&&(parameter3==NULL)) {
 		key=12;
 		fileName = parameter2;
-	}
-	else if((strcmp(command,"cp")==0)&&(parameter1!=NULL))
-	{
+	} else if((strcmp(command,"cp")==0)&&(parameter1!=NULL)) {
 		key=15;
-	}
-	else
-	{
-		key=100;
+	}else if((strcmp(command, "history")==0) && (parameter1==NULL)) {			//查询当天操作记录
+		key = 16;
+	}else if((strcmp(command, "history")==0) && (strcmp(parameter1,"-a")==0)&& (parameter2==NULL)) {		//查询所有操作记录
+		key = 17;
+	}else if((strcmp(command, "history")==0) && (parameter1!=NULL) && (parameter2==NULL)) {		//查询指定日期操作记录
+		key = 18;
+		spe_date = parameter1;
+	}else if((strcmp(command, "help")==0)) {		//帮助信息
+		key = 100;
+	}else {						//错误信息处理
+		key = -1;
 	}
 	return key;
 
@@ -458,7 +433,7 @@ void excute_copy_file(){
 }
 
 /*
- * execute_help():执行query操作
+ * execute_help()
  * 参数：无
  * 返回值：无
  * 功能描述：显示帮助信息
@@ -468,4 +443,11 @@ void excute_help(){
 	help_menu();
 
 }
+
+void excute_error(){
+
+	printf("%s\n", "命令错误，请检查后重新输入或输入help寻求帮助");
+
+}
+
 

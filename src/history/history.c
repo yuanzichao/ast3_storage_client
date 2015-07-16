@@ -38,6 +38,7 @@ insert_history(char* operation) {
 
 	if (mysql_query(g_conn, sql)){
     	 print_mysql_error(NULL);
+    	 return EXIT_FAILURE;
     }
 
 	//插入数据
@@ -47,6 +48,7 @@ insert_history(char* operation) {
 
 	if (mysql_query(g_conn, sql)){
     	 print_mysql_error(NULL);
+    	 return EXIT_FAILURE;
     }
 
 
@@ -81,6 +83,7 @@ get_cur_history() {
 
 	if (mysql_query(g_conn, sql)){
     	 print_mysql_error(NULL);
+    	 return EXIT_FAILURE;
     }
 
     g_res = mysql_store_result(g_conn); //从服务器传送结果集至本地，mysql_use_result直接使用服务器上的记录集
@@ -104,7 +107,8 @@ get_spe_history(char* date) {
 	sprintf(sql, "SELECT * FROM `history_%s`", date);
 
 	if (mysql_query(g_conn, sql)){
-    	 print_mysql_error(NULL);
+    	 printf("%s\n", "参数错误，请重试");
+    	 return EXIT_FAILURE;
     }
 
     g_res = mysql_store_result(g_conn); //从服务器传送结果集至本地，mysql_use_result直接使用服务器上的记录集
@@ -128,10 +132,9 @@ get_all_history() {
     GetProfileString("./etc/ast3_db_info.conf", "DB_INFO", "DBName", db_name);
     sprintf(sql, "SELECT table_name FROM information_schema.tables WHERE table_schema='%s' AND table_type='base table' AND table_name LIKE 'history_%s'", db_name, "%");
 
-    printf("%s\n", sql);
-
     if (mysql_query(g_conn, sql)){
     	 print_mysql_error(NULL);
+    	 return EXIT_FAILURE;
     }
 
     g_res = mysql_store_result(g_conn); //从服务器传送结果集至本地，mysql_use_result直接使用服务器上的记录集
@@ -146,6 +149,7 @@ get_all_history() {
 
 		if (mysql_query(g_conn, sql)){
 			 print_mysql_error(NULL);
+			 return EXIT_FAILURE;
 		}
 
 		MYSQL_RES *history; // mysql 记录集
