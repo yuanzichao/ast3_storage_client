@@ -107,7 +107,6 @@ get_spe_history(char* date) {
 	sprintf(sql, "SELECT * FROM `history_%s`", date);
 
 	if (mysql_query(g_conn, sql)){
-    	 printf("%s\n", "参数错误，请重试");
     	 return EXIT_FAILURE;
     }
 
