@@ -18,6 +18,7 @@
 int key;
 char* currentDisk;
 char* currentDirectory;
+char* currentFile;
 
 char* fileName;
 

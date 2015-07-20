@@ -79,6 +79,7 @@ function_list() {
 	printf("/location 起始赤经 终止赤经 起始赤纬 终止赤纬\t\t从根目录开始检索指定位置范围内的文件\n");
 	printf("cp 文件名\t\t\t\t\t\t复制指定目录下的文件到特定路径下\n");
 	printf("cp 目录名\t\t\t\t\t\t复制指定文件到特定路径下\n");
+	printf("get 文件名\t\t\t\t\t获取指定文件\n");
 	printf("history\t\t\t\t\t\t获取当天操作日志\n");
 	printf("history 指定日期（20150101）\t\t\t获取指定日期操作日志\n");
 	printf("history -a\t\t\t\t\t获取所有操作日志信息\n");

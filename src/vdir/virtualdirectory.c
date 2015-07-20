@@ -92,6 +92,9 @@ int format(char* input){
 	}else if((strcmp(command, "history")==0) && (parameter1!=NULL) && (parameter2==NULL)) {		//查询指定日期操作记录
 		key = 18;
 		spe_date = parameter1;
+	}else if((strcmp(command, "get")==0) && (parameter1!=NULL) && (parameter2==NULL)) {		//查询指定日期操作记录
+		key = 19;
+		currentFile = parameter1;
 	}else if((strcmp(command, "help")==0)) {		//帮助信息
 		key = 100;
 	}else {						//错误信息处理

@@ -7,6 +7,8 @@
 #include "sql/sql.h"
 #include "welcome/welcome.h"
 #include "history/history.h"
+#include "request/request.h"
+
 
 //主函数
 int main()
@@ -19,6 +21,7 @@ int main()
 	char input[MAX_BUF_SIZE];
 	char curr_disk[MAX_BUF_SIZE];
 	char curr_dir[MAX_BUF_SIZE];
+	char curr_file[MAX_BUF_SIZE];
 
 
 	//欢迎界面
@@ -33,6 +36,8 @@ int main()
     memcpy(curr_disk, "home", sizeof(curr_disk));
     memset(curr_dir, 0, sizeof(curr_dir));
     memcpy(curr_dir, "unknown", sizeof(curr_dir));
+    memset(curr_file, 0, sizeof(curr_file));
+//    memcpy(curr_file, "", sizeof(curr_file));
 
     //输出当前根目录
     printf("%s/", curr_disk);
@@ -153,7 +158,7 @@ int main()
 			}
 			case 14:
 			{
-				query_location_curr(curr_dir,curr_disk,start_ra, end_ra, start_dec, end_dec);
+				query_location_curr(curr_dir, curr_disk, start_ra, end_ra, start_dec, end_dec);
 				break;
 			}
 			case 15:
@@ -163,24 +168,45 @@ int main()
 			}
 			case 16:
 			{
-				get_cur_history();			//查询当天所有操作记录
+				//查询当天所有操作记录
+				if(get_cur_history() == EXIT_FAILURE) {
+					excute_error();
+				}
 				break;
 			}
 			case 17:
 			{
-				get_all_history();			//查询当天所有操作记录
+				//查询当天所有操作记录
+				if(get_all_history() == EXIT_FAILURE) {
+					excute_error();
+				}
 				break;
 			}
 			case 18:
 			{
-				get_spe_history(spe_date);			//查询当天所有操作记录
+				//查询当天所有操作记录
+				if(get_spe_history(spe_date) == EXIT_FAILURE) {
+					excute_error();
+				}
+				break;
+			}
+			case 19:
+			{
+				memset(curr_file, 0, sizeof(curr_file));
+				memcpy(curr_file, currentFile, sizeof(curr_file));
+
+				//生成请求信息
+				if(gen_request(curr_file, curr_dir, curr_disk) == EXIT_FAILURE) {
+					excute_error();
+				}
+
 				break;
 			}
 
 
 			case 100:
 			{
-				excute_help();;						//帮助菜单
+				excute_help();						//帮助菜单
 				break;
 			}
 
