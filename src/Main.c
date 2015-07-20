@@ -100,7 +100,7 @@ int main()
 			case 5://切换到指定目录
 			{
 				memset(curr_disk, 0, sizeof(curr_disk));
-				memcpy(curr_disk, curr_disk, sizeof(curr_disk));
+				memcpy(curr_disk, currentDisk, sizeof(currentDisk));
 				break;
 			}
 			case 6:

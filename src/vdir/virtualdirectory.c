@@ -21,21 +21,17 @@
  */
 int format(char* input){
 
-	char* newInput;
-	newInput=strtok(input,"\n");
-
 	char* command;
 	char* parameter1;
 	char* parameter2;
 	char* parameter3;
 	char* parameter4;
 
-	command=strtok(newInput," ");
+	command=strtok(input," ");
 	parameter1=strtok(NULL," ");
 	parameter2=strtok(NULL," ");
 	parameter3=strtok(NULL," ");
 	parameter4=strtok(NULL," ");
-	//printf("%s\n",command);
 
 
 	if((strcmp(command,"ls")==0)&&(parameter1==NULL)) {
