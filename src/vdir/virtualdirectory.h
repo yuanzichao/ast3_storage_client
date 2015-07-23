@@ -8,13 +8,6 @@
 #include <mysql/mysql.h>
 #include "../orm/db.h"
 
-#ifndef SRC_VIRTUALDIRECTORY_H_
-#define SRC_VIRTUALDIRECTORY_H_
-
-
-
-#endif /* SRC_VIRTUALDIRECTORY_H_ */
-
 int key;
 char* currentDisk;
 char* currentDirectory;
