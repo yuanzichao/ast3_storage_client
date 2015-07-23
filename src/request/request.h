@@ -11,6 +11,7 @@
 #include "../utils/cJSON.h"
 #include "../sql/sql.h"
 
+#define ASSOCIATE_FILES 1			//关联文件数
 
 char* request_str;
 
