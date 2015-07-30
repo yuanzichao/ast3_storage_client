@@ -26,19 +26,19 @@ typedef struct db_disk_info {
 	double disk_capacity;
 	double disk_used;
 	time_t recent_use_time;
-	int permisssion;
+	int permission;
 	int disk_status;
 } db_disk_info;
 typedef struct db_file_info {
 	int file_id;
 	char * file_name;
 	char * disk_uuid;
-	char * directory_name;
+	int directory_id;
 	char * disk_name;
 	char * md5;
 	double file_size;
-	double ra_val;
-	double dec_val;
+	char * ra_val;
+	char * dec_val;
 	time_t time;
 	time_t recent_use_time;
 	int permission;

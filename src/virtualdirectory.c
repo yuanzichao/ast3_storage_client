@@ -37,89 +37,89 @@ int format(char* input){
 	//printf("%s\n",command);
 
 
-	if((strcmp(command,"ls")==0)&&(parameter1==NULL))
+	if((strcmp(command,"ls")==0)&&(parameter1==NULL))   //ls
 	{
 		key=0;
 	}
-	else if((strcmp(command,"ls")==0)&&(strcmp(parameter1,"-l")==0)&&(parameter2==NULL))
-	{
-		key=10;
-	}
-	else if((strcmp(command,"ls")==0)&&(strcmp(parameter1,"-l")==0)&&(parameter2!=NULL)&&(strcmp(parameter2,"*.fits")!=0)&&(parameter3==NULL))
-	{
-		key=11;
-		fileName=parameter2;
-	}
-	else if((strcmp(command,"ls")==0)&&(strcmp(parameter1,"-***")==0)&&(parameter2==NULL))
+	else if((strcmp(command,"ls")==0)&&(strcmp(parameter1,"-l")==0)&&(parameter2==NULL))   //ls -l
 	{
 		key=1;
 	}
-
-	else if((strcmp(command,"cd")==0)&&(strcmp(parameter1,"/")==0)&&(parameter2==NULL))
+	else if((strcmp(command,"ls")==0)&&(strcmp(parameter1,"-l")==0)&&(parameter2!=NULL)&&(strcmp(parameter2,"*.fits")!=0)&&(parameter3==NULL))   //ls -l fileName
 	{
 		key=2;
-		currentDisk=parameter1;
+		fileName=parameter2;
 	}
-	else if((strcmp(command,"cd")==0)&&(strcmp(parameter1,"..")==0)&&(parameter2==NULL))
+	else if((strcmp(command,"ls")==0)&&(strcmp(parameter1,"-***")==0)&&(parameter2==NULL))   //ls -***
 	{
 		key=3;
-		//currentDirectory=parameter1;
 	}
-	else if((strcmp(command,"cd")==0)&&(parameter1!=NULL)&&(strcmp(parameter1,"..")!=0)&&(strcmp(parameter1,"/")!=0)&&(parameter2==NULL))
+	else if((strcmp(command,"ls")==0)&&(strcmp(parameter1,"-***")==0)&&(parameter2!=NULL)&&(parameter3==NULL))  //ls -*** fileName
 	{
 		key=4;
-		currentDirectory=parameter1;
+		fileName = parameter2;
 	}
-	else if((strcmp(command,"open")==0)&&(parameter1!=NULL)&&(parameter2==NULL))
+	else if((strcmp(command,"cd")==0)&&(strcmp(parameter1,"/")==0)&&(parameter2==NULL))  //cd /
 	{
 		key=5;
 		currentDisk=parameter1;
 	}
-	else if((strcmp(command,"ls")==0)&&(strcmp(parameter1,"-***")==0)&&(parameter2!=NULL)&&(parameter3==NULL))
+	else if((strcmp(command,"cd")==0)&&(strcmp(parameter1,"..")==0)&&(parameter2==NULL))   //cd ..
 	{
 		key=6;
-		fileName = parameter2;
+		//currentDirectory=parameter1;
 	}
-	else if((strcmp(command,"pwd")==0)&&(parameter1==NULL))
+	else if((strcmp(command,"cd")==0)&&(parameter1!=NULL)&&(strcmp(parameter1,"..")!=0)&&(strcmp(parameter1,"/")!=0)&&(parameter2==NULL)) //cd dir
 	{
 		key=7;
+		currentDirectory=parameter1;
 	}
-	else if((strcmp(command,"find")==0)&&(strcmp(parameter1,"time")==0)&&(parameter2!=NULL)&&(parameter3!=NULL)&&(parameter4==NULL))
+	else if((strcmp(command,"open")==0)&&(parameter1!=NULL)&&(parameter2==NULL))  //open disk
 	{
 		key=8;
-		startTime = parameter2;
-		endTime = parameter3;
+		currentDisk=parameter1;
 	}
-	else if((strcmp(command,"find")==0)&&(strcmp(parameter1,"/time")==0)&&(parameter2!=NULL)&&(parameter3!=NULL)&&(parameter4==NULL))
-	{
-		key=13;
-		startTime = parameter2;
-		endTime = parameter3;
-	}
-	else if(strcmp(command,"/location")==0)
+
+	else if((strcmp(command,"pwd")==0)&&(parameter1==NULL))  //pwd
 	{
 		key=9;
-		start_ra = parameter1;
-		end_ra = parameter2;
-		start_dec = parameter3;
-		end_dec  = parameter4;
 	}
-	else if(strcmp(command,"location")==0)
+	else if((strcmp(command,"find")==0)&&(strcmp(parameter1,"time")==0)&&(parameter2!=NULL)&&(parameter3!=NULL)&&(parameter4==NULL)) //find time
 	{
-		key=14;
-		start_ra = parameter1;
-		end_ra = parameter2;
-		start_dec = parameter3;
-		end_dec  = parameter4;
+		key=10;
+		startTime = parameter2;
+		endTime = parameter3;
 	}
-	else if((strcmp(command,"ls")==0)&&(strcmp(parameter1,"-l")==0)&&(strcmp(parameter2,"*.fits")==0)&&(parameter3==NULL))
+	else if((strcmp(command,"find")==0)&&(strcmp(parameter1,"/time")==0)&&(parameter2!=NULL)&&(parameter3!=NULL)&&(parameter4==NULL))  //find /time
+	{
+		key=11;
+		startTime = parameter2;
+		endTime = parameter3;
+	}
+	else if(strcmp(command,"/location")==0)  //  /location
 	{
 		key=12;
-		fileName = parameter2;
+		start_ra = parameter1;
+		end_ra = parameter2;
+		start_dec = parameter3;
+		end_dec  = parameter4;
 	}
+	else if(strcmp(command,"location")==0)  //  location
+	{
+		key=13;
+		start_ra = parameter1;
+		end_ra = parameter2;
+		start_dec = parameter3;
+		end_dec  = parameter4;
+	}
+	/*else if((strcmp(command,"ls")==0)&&(strcmp(parameter1,"-l")==0)&&(strcmp(parameter2,"*.fits")==0)&&(parameter3==NULL))
+	{
+		key=11;
+		fileName = parameter2;
+	}*/
 	else if((strcmp(command,"cp")==0)&&(parameter1!=NULL))
 	{
-		key=15;
+		key=14;
 	}
 	else
 	{
@@ -210,9 +210,9 @@ void excute_use(char* diskName){
  * 返回值：无
  * 功能描述：列出指定磁盘下的目录信息
  */
-void excute_list(char* diskName){
+void excute_list_directory(char* diskName,char* dirId){
 
-	query_disks_info(diskName);  //查询目录信息
+	query_disks_info(diskName,dirId);  //查询目录信息
 	print_result();              //打印结果
 	//printf("%d",print_result());
 	/*if((print_result())!=11)
@@ -230,9 +230,9 @@ void excute_list(char* diskName){
  * 返回值：无
  * 功能描述：列出指定磁盘下的目录基本信息
  */
-void excute_list_primary(char* diskName){
+void excute_list_primary_directory(char* diskName,char* dirId){
 
-	query_disks_primary_info(diskName);  //查询目录信息
+	query_disks_primary_info(diskName,dirId);  //查询目录信息
 	print_result();              //打印结果
 	//printf("%d",print_result());
 	/*if((print_result())!=11)
@@ -250,9 +250,9 @@ void excute_list_primary(char* diskName){
  * 返回值：无
  * 功能描述：列出指定磁盘下的目录信息
  */
-void excute_list_all(char* diskName){
+void excute_list_all_directory(char* diskName,char* dirId){
 
-	query_disks_all_info(diskName);  //查询目录信息
+	query_disks_all_info(diskName,dirId);  //查询目录信息
 	print_result();              //打印结果
 	//printf("%d",print_result());
 	/*if((print_result())!=11)
@@ -270,9 +270,9 @@ void excute_list_all(char* diskName){
  * 返回值：无
  * 功能描述：在终端显示当前目录结构
  */
-void excute_ls(char* dirName, char* diskName){
+void excute_list_file(char* diskName, char* dirId){
 
-	query_directory_info(dirName, diskName);//查询当前目录内文件和目录信息
+	query_directory_info(diskName, dirId);//查询当前目录内文件和目录信息
 	print_result();       //打印结果
 	//printf("%d",print_result());
 	/*if((print_result())!=13)
@@ -290,9 +290,9 @@ void excute_ls(char* dirName, char* diskName){
  * 返回值：无
  * 功能描述：在终端显示当前目录基本信息
  */
-void excute_ls_primary(char* dirName, char* diskName){
+void excute_list_primary_file(char* dirName, char* dirId){
 
-	query_directory_primary_info(dirName, diskName);//查询当前目录内文件和目录详细信息
+	query_directory_primary_info(dirName, dirId);//查询当前目录内文件和目录详细信息
 	print_result();       //打印结果
 	//printf("%d",print_result());
 	/*if((print_result())!=13)
@@ -310,9 +310,9 @@ void excute_ls_primary(char* dirName, char* diskName){
  * 返回值：无
  * 功能描述：在终端显示当前目录详细信息
  */
-void excute_ls_all(char* dirName, char* diskName){
+void excute_list_all_file(char* diskName, char* dirId){
 
-	query_directory_all_info(dirName, diskName);//查询当前目录内文件和目录详细信息
+	query_directory_all_info(diskName, dirId);//查询当前目录内文件和目录详细信息
 	print_result();       //打印结果
 	//printf("%d",print_result());
 	/*if((print_result())!=13)
@@ -374,10 +374,11 @@ void query_time_from_home(char *start_time,  char *end_time){
  * 返回值：无
  * 功能描述：显示当前工作目录
  */
-void query_time_from_curr(char* dirName,char* diskName,char *start_time,  char *end_time){
+void query_time_from_curr(char* diskName,char* dirId,char *start_time,  char *end_time){
 
-	query_file_by_time_curr(dirName,diskName,start_time, end_time);//根据时间查询文件信息
-	print_result();		  //打印结果
+	query_file_by_time_curr(diskName,dirId,start_time, end_time);//根据时间查询文件信息
+	//print_result();		  //打印结果
+
 	//printf("%d",print_result());
 	/*if((print_result())!=13)
 	{
@@ -411,16 +412,16 @@ query_location(char *start_ra, char *end_ra, char *start_dec, char *end_dec){
  * 功能描述：根据位置查询文件信息
  */
 void
-query_location_curr(char* dirName,char* diskName,char *start_ra, char *end_ra, char *start_dec, char *end_dec){
+query_location_curr(char* diskName,char* dirId,char *start_ra, char *end_ra, char *start_dec, char *end_dec){
 
-	query_file_by_curr_location(dirName,diskName,start_ra, end_ra, start_dec, end_dec);	//根据位置查询文件信息
-	print_result();		  //打印结果
+	query_file_by_curr_location(diskName,dirId,start_ra, end_ra, start_dec, end_dec);	//根据位置查询文件信息
+	//print_result();		  //打印结果
 	free_result();        //释放结果集
 }
 
 
 
-void excute_return_parent_directory(char* dirName,char* diskName){
+/*void excute_return_parent_directory(char* dirName,char* diskName){
 
 	char* dirID;
 	memset(dirID, 0, sizeof(char)*100);
@@ -432,21 +433,68 @@ void excute_return_parent_directory(char* dirName,char* diskName){
 	print_result();
 	free_result();
 
+}*/
+/*
+ * 返回父目录
+ */
+void excute_return_parent_directory(){
+
+	if(strcmp(currentDisk,"home")==0)
+	{
+
+	}
+	else if(strcmp(currentDirectory,"unknown")==0)
+	{
+		memset(currentDisk, 0, sizeof(char)*MAX_BUF_SIZE);
+		memcpy(currentDisk, "home",sizeof(char)*4);
+	}
+	else
+	{
+		currentDirId = get_parent_id(currentDirId);
+		if(strcmp(currentDirId,"0")==0)
+		{
+			memset(currentDirectory, 0, sizeof(char)*MAX_BUF_SIZE);
+			memcpy(currentDirectory, "unknown", sizeof(char)*7);
+			//当前ID？
+		}
+		else
+		{
+			currentDirectory = get_directory_name(currentDirId);
+		}
+	}
+
 }
 
+int excute_change_directory(char* diskName,char* dirName,char* parentId){
 
+    char* dirId = (char*)malloc(MAX_BUF_SIZE);
+	dirId = get_directory_id(diskName,dirName,parentId);
+	if(strcmp(dirId,"false")==0)
+	{
+		printf("%s","The directory not exist.\n");
+		return 1;
+	}
+	else
+	{
+		currentDirId = dirId;
+		return 0;
+	}
+}
 
-void excute_ls_file_primary(char* fileName,char* dirName,char* diskName){
+/*
+ * 显示指定文件的基本信息
+ */
+void excute_list_primary_oneFile(char* diskName,char* dirId, char* fileName){
 
-	get_file_primary_info(fileName,dirName, diskName);
+	get_file_primary_info(diskName,dirId,fileName);
 	print_result();
 	free_result();
 }
 
 
-void excute_ls_file_all(char* fileName,char* dirName,char* diskName){
+void excute_list_all_oneFile(char* diskName,char* dirId, char* fileName){
 
-	get_file_all_info(fileName,dirName, diskName);
+	get_file_all_info(diskName,dirId, fileName);
 	print_result();
 	free_result();
 }
@@ -455,6 +503,7 @@ void excute_copy_file(){
 
 	printf("The file has been copied to cache directory\n");
 }
+
 
 /*
  * execute_help():执行query操作
