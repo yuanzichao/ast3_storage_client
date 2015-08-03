@@ -260,7 +260,7 @@ get_files(char* request) {
 		FILE *dest_fp;
 		if ((dest_fp = fopen(file_path, "w")) == NULL){
 			printf("fopen %s failed.\n", file_path);
-			return -1;
+			return EXIT_FAILURE;
 		}
 
 
@@ -275,7 +275,7 @@ get_files(char* request) {
 		 while((length = recv(sockfd, dest_buf, BUFSIZE, 0)) > 0) {
 			 if(fwrite(dest_buf, sizeof(char), length, dest_fp) < length) {
 				 printf("File:\t%s Write Failed\n", file_path);
-				 break;
+				 return EXIT_FAILURE;
 			 }
 
 			 bzero(dest_buf, BUFSIZE);
@@ -284,6 +284,8 @@ get_files(char* request) {
 		printf("Recieve File:\t %s From Server Finished\n", file_path);
 
 		fclose(dest_fp);
+
+		break;
 
 	}
 

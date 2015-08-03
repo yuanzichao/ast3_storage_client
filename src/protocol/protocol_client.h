@@ -16,6 +16,10 @@
 #include <sys/errno.h>
 #include <sys/socket.h>
 
+
+#include "../utils/read_conf.h"
+
+
 #define BACKLOG 10
 #define PORT "5000"
 #define ARRAY_PROTOCOL 1
