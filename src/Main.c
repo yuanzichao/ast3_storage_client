@@ -8,6 +8,7 @@
 #include "welcome/welcome.h"
 #include "history/history.h"
 #include "request/request.h"
+#include "protocol/protocol_client.h"
 
 
 //主函数
@@ -201,11 +202,13 @@ int main()
 				}
 
 				//发送请求消息
-				get_files(request_str);
+				if(get_files(request_str) == EXIT_FAILURE) {
+					excute_error();
+				}
+
 
 				break;
 			}
-
 
 			case 100:
 			{

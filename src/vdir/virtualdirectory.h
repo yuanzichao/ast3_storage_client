@@ -53,6 +53,7 @@ void excute_pwd();
 void query_time_from_home(char *start_time, char * end_time);
 void query_time_from_curr(char* dirName, char* diskName,char *start_time, char * end_time);
 void query_location(char *start_ra, char *end_ra, char *start_dec, char *end_dec);
+void query_location_curr(char* dirName,char* diskName,char *start_ra, char *end_ra, char *start_dec, char *end_dec);
 void excute_return_parent_directory(char* dirName,char* diskName);
 void excute_copy_file();
 void excute_help();
