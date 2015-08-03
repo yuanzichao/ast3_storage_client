@@ -230,7 +230,6 @@ ast3array_recv_ack(int sockfd, uint32_t *code, char *data, size_t size)
  * 参数：请求消息（JSON）
  *
  */
-
 int
 get_files(char* request) {
 
@@ -249,14 +248,18 @@ get_files(char* request) {
 
 		ast3array_recv_ack(sockfd, &code, buf, BUFSIZE);
 
-		char file_name[BUFSIZE];
-		memset(file_name, 0, BUFSIZE);
-		sprintf(file_name, "/home/yuan/test/%s", buf);
+		//文件存储目录路径
+		char file_path[BUFSIZE];
+		memset(file_path, 0, BUFSIZE);
+
+		//获取文件存储目录路径
+		GetProfileString("./etc/ast3_dir_monitor.conf", "DIR_PATH", "path", file_path);
+		sprintf(file_path, "%s", buf);
 
 
 		FILE *dest_fp;
-		if ((dest_fp = fopen(file_name, "w")) == NULL){
-			printf("fopen %s failed.\n", file_name);
+		if ((dest_fp = fopen(file_path, "w")) == NULL){
+			printf("fopen %s failed.\n", file_path);
 			return -1;
 		}
 
@@ -271,14 +274,14 @@ get_files(char* request) {
 
 		 while((length = recv(sockfd, dest_buf, BUFSIZE, 0)) > 0) {
 			 if(fwrite(dest_buf, sizeof(char), length, dest_fp) < length) {
-				 printf("File:\t%s Write Failed\n", file_name);
+				 printf("File:\t%s Write Failed\n", file_path);
 				 break;
 			 }
 
 			 bzero(dest_buf, BUFSIZE);
 		 }
 
-		printf("Recieve File:\t %s From Server Finished\n", file_name);
+		printf("Recieve File:\t %s From Server Finished\n", file_path);
 
 		fclose(dest_fp);
 

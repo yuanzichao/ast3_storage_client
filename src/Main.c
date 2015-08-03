@@ -200,6 +200,9 @@ int main()
 					excute_error();
 				}
 
+				//发送请求消息
+				get_files(request_str);
+
 				break;
 			}
 
